@@ -1,4 +1,4 @@
-# BetBolt - Mobile Sports Betting Reels
+# BetBolt - Sports Betting Reels - Mobile Sports Betting Reels
 
 A mobile-first sports betting app with TikTok-style reels, built with Next.js, TypeScript, and Supabase.
 
