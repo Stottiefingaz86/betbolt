@@ -41,7 +41,259 @@ export default function Page() {
   // Boxing interest state
   const [boxingAnswer, setBoxingAnswer] = useState<'yes' | 'no' | null>(null);
 
+  // Onboarding state
+  const [onboardingStep, setOnboardingStep] = useState(1);
+  const [selectedSports, setSelectedSports] = useState<string[]>([]);
+  const [selectedCasino, setSelectedCasino] = useState<string[]>([]);
+
+  // Personalization preferences
+  const [preferences, setPreferences] = useState({
+    football: true,
+    basketball: true,
+    tennis: true,
+    boxing: true,
+    mma: true,
+    premierLeague: true,
+    nfl: true,
+    nba: true,
+    championsLeague: true,
+    laLiga: true,
+    ufc: true,
+  });
+
   const reels = [
+    // Onboarding / Landing Page
+    {
+      id: 'onboarding',
+      render: (active: boolean, reelId: string) => {
+        const sports = ['Football', 'Basketball', 'Tennis', 'Boxing', 'MMA', 'Soccer', 'Baseball', 'Hockey'];
+        const casinoGames = ['Slots', 'Blackjack', 'Roulette', 'Poker', 'Baccarat', 'Live Casino'];
+
+        const toggleSport = (sport: string) => {
+          setSelectedSports(prev => 
+            prev.includes(sport) ? prev.filter(s => s !== sport) : [...prev, sport]
+          );
+        };
+
+        const toggleCasino = (game: string) => {
+          setSelectedCasino(prev => 
+            prev.includes(game) ? prev.filter(g => g !== game) : [...prev, game]
+          );
+        };
+
+        return (
+          <div className="relative h-app w-full bg-black">
+            <div className="absolute inset-0 z-0">
+              <LiquidEther
+                colors={['#ff0080', '#7000ff', '#0080ff']}
+                mouseForce={25}
+                cursorSize={120}
+                isViscous={false}
+                viscous={30}
+                iterationsViscous={32}
+                iterationsPoisson={32}
+                resolution={0.6}
+                isBounce={false}
+                autoDemo={true}
+                autoSpeed={0.5}
+                autoIntensity={1.5}
+                takeoverDuration={0.3}
+                autoResumeDelay={2000}
+                autoRampDuration={0.8}
+              />
+            </div>
+
+            {/* Logo - Top Left */}
+            <div className="absolute top-4 left-4 z-30">
+              <Image src="/flaame.png" alt="Flaame Logo" width={60} height={60} />
+            </div>
+
+            {/* Balance - Top Right */}
+            <div className="absolute top-4 right-4 z-30">
+              <button
+                onClick={() => setIsBalanceDrawerOpen(true)}
+                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-2 flex items-center space-x-3 hover:bg-white/20 transition-all duration-200"
+              >
+                <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">BB</span>
+                </div>
+                <div className="w-px h-4 bg-white/30"></div>
+                <div className="flex items-baseline space-x-1">
+                  <span className="text-white/60 text-xs">$</span>
+                  <span className="text-white text-sm font-bold">1,250.00</span>
+                </div>
+              </button>
+            </div>
+
+            {/* Side Menu - Right Side */}
+            <div className="absolute right-4 bottom-24 z-30 flex flex-col items-center space-y-6">
+              <div className="flex flex-col items-center space-y-2">
+                <button 
+                  className="relative"
+                  onClick={() => setIsMenuDrawerOpen(true)}
+                >
+                  <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M6 12h12M8 18h8" />
+                    </svg>
+                  </div>
+                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Menu</span>
+                </button>
+              </div>
+
+              <div className="flex flex-col items-center space-y-2">
+                <button 
+                  className="relative"
+                  onClick={() => {
+                    setLikedReels(prev => {
+                      const newSet = new Set(prev);
+                      if (newSet.has(reelId)) {
+                        newSet.delete(reelId);
+                      } else {
+                        newSet.add(reelId);
+                      }
+                      return newSet;
+                    });
+                  }}
+                >
+                  <div className={`w-12 h-12 rounded-full backdrop-blur-sm border border-white/20 flex items-center justify-center transition-all duration-200 ${
+                    likedReels.has(reelId) ? 'bg-pink-500' : 'bg-white/10'
+                  }`}>
+                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                  </div>
+                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Like</span>
+                </button>
+              </div>
+
+              <div className="flex flex-col items-center space-y-2">
+                <button 
+                  className="relative"
+                  onClick={() => window.location.href = '/casino'}
+                >
+                  <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                      <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
+                    </svg>
+                  </div>
+                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Casino</span>
+                </button>
+              </div>
+
+              {/* My Bets */}
+              <div className="flex flex-col items-center space-y-2">
+                <button 
+                  onClick={() => setIsBetSlipOpen(true)}
+                  className="relative"
+                >
+                  <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                    {legs.length > 0 && (
+                      <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                        <span className="text-white text-xs font-bold">{legs.length}</span>
+                      </div>
+                    )}
+                  </div>
+                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>My Bets</span>
+                </button>
+              </div>
+            </div>
+
+            {onboardingStep === 1 && (
+              <div className="absolute bottom-24 left-6 z-20" style={{right: '100px'}}>
+                <h1 className="text-xl font-black text-white mb-2">What sports are you interested in?</h1>
+                <p className="text-white/70 text-sm mb-6 max-w-xs">Select your favorite sports to personalize your betting experience.</p>
+                
+                <div className="flex flex-wrap gap-3 mb-6 max-w-sm">
+                  {sports.map(sport => (
+                    <button
+                      key={sport}
+                      onClick={() => toggleSport(sport)}
+                      className={`px-5 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 ${
+                        selectedSports.includes(sport)
+                          ? 'bg-white text-black'
+                          : 'bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20'
+                      }`}
+                    >
+                      {sport}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setOnboardingStep(2)}
+                  disabled={selectedSports.length === 0}
+                  className={`px-6 py-3 rounded-lg font-medium text-sm transition-all duration-200 ${
+                    selectedSports.length === 0
+                      ? 'bg-white/10 text-white/30 cursor-not-allowed'
+                      : 'bg-white text-black hover:bg-gray-100'
+                  }`}
+                >
+                  Continue
+                </button>
+              </div>
+            )}
+
+            {onboardingStep === 2 && (
+              <div className="absolute bottom-24 left-6 z-20" style={{right: '100px'}}>
+                <h1 className="text-xl font-black text-white mb-2">What about casino games?</h1>
+                <p className="text-white/70 text-sm mb-6 max-w-xs">Choose the casino games you'd like to see.</p>
+                
+                <div className="flex flex-wrap gap-3 mb-6 max-w-sm">
+                  {casinoGames.map(game => (
+                    <button
+                      key={game}
+                      onClick={() => toggleCasino(game)}
+                      className={`px-5 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 ${
+                        selectedCasino.includes(game)
+                          ? 'bg-white text-black'
+                          : 'bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20'
+                      }`}
+                    >
+                      {game}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => setOnboardingStep(3)}
+                  disabled={selectedCasino.length === 0}
+                  className={`px-6 py-3 rounded-lg font-medium text-sm transition-all duration-200 ${
+                    selectedCasino.length === 0
+                      ? 'bg-white/10 text-white/30 cursor-not-allowed'
+                      : 'bg-white text-black hover:bg-gray-100'
+                  }`}
+                >
+                  Continue
+                </button>
+              </div>
+            )}
+
+            {onboardingStep === 3 && (
+              <div className="absolute bottom-24 left-6 z-20" style={{right: '100px'}}>
+                <h1 className="text-xl font-black text-white mb-2">Welcome to Flaame!</h1>
+                <p className="text-white/80 text-sm mb-32 max-w-xs">Your personalized betting experience starts now</p>
+                
+                <div className="absolute bottom-0 left-0 flex flex-col items-start">
+                  <div className="flex items-center space-x-2 mb-2">
+                    <div className="animate-bounce">
+                      <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                      </svg>
+                    </div>
+                    <p className="text-white/70 text-xs font-medium">Swipe down to see your betting reels</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      },
+    },
+
     // Premier League Reels
     {
       id: 'salah-first-goal',
@@ -151,7 +403,10 @@ export default function Page() {
 
               {/* Casino */}
               <div className="flex flex-col items-center space-y-2">
-                <button className="relative">
+                <button 
+                  className="relative"
+                  onClick={() => window.location.href = '/casino'}
+                >
                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
                       <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
@@ -370,7 +625,10 @@ export default function Page() {
 
               {/* Casino */}
               <div className="flex flex-col items-center space-y-2">
-                <button className="relative">
+                <button 
+                  className="relative"
+                  onClick={() => window.location.href = '/casino'}
+                >
                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
                       <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
@@ -603,7 +861,10 @@ export default function Page() {
 
               {/* Casino */}
               <div className="flex flex-col items-center space-y-2">
-                <button className="relative">
+                <button 
+                  className="relative"
+                  onClick={() => window.location.href = '/casino'}
+                >
                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
                       <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
@@ -1118,7 +1379,10 @@ export default function Page() {
 
               {/* Casino */}
               <div className="flex flex-col items-center space-y-2">
-                <button className="relative">
+                <button 
+                  className="relative"
+                  onClick={() => window.location.href = '/casino'}
+                >
                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
                       <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
@@ -1465,7 +1729,10 @@ export default function Page() {
 
               {/* Casino */}
               <div className="flex flex-col items-center space-y-2">
-                <button className="relative">
+                <button 
+                  className="relative"
+                  onClick={() => window.location.href = '/casino'}
+                >
                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
                       <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
@@ -1967,7 +2234,10 @@ export default function Page() {
 
               {/* Casino */}
               <div className="flex flex-col items-center space-y-2">
-                <button className="relative">
+                <button 
+                  className="relative"
+                  onClick={() => window.location.href = '/casino'}
+                >
                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
                       <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
@@ -2002,11 +2272,13 @@ export default function Page() {
             <div className="absolute bottom-24 left-6 right-6 z-20">
               <div className="mb-2">
                 <div className="flex items-center space-x-2 mb-1">
-                  <div className="w-5 h-5 rounded-full bg-purple-600 flex items-center justify-center">
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
-                  </div>
+                  <Image
+                    src="/Horse-Racing-101.svg"
+                    alt="Horse Racing"
+                    width={20}
+                    height={20}
+                    className="opacity-80"
+                  />
                   <span className="text-white/60 text-xs">Horse Racing • Kentucky Derby</span>
                 </div>
                 <div className="text-white/80 text-xs mb-2">Today 6:57 PM EST</div>
@@ -2148,7 +2420,10 @@ export default function Page() {
 
               {/* Casino */}
               <div className="flex flex-col items-center space-y-2">
-                <button className="relative">
+                <button 
+                  className="relative"
+                  onClick={() => window.location.href = '/casino'}
+                >
                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
                       <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
@@ -2183,11 +2458,13 @@ export default function Page() {
             <div className="absolute bottom-24 left-6 right-6 z-20">
               <div className="mb-2">
                 <div className="flex items-center space-x-2 mb-1">
-                  <div className="w-5 h-5 rounded-full bg-green-600 flex items-center justify-center">
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
-                  </div>
+                  <Image
+                    src="/Golf pga.svg"
+                    alt="Golf"
+                    width={20}
+                    height={20}
+                    className="opacity-80"
+                  />
                   <span className="text-white/60 text-xs">Golf • Masters Tournament</span>
                 </div>
                 <div className="text-white/80 text-xs mb-2">Today 2:00 PM EST</div>
@@ -2329,7 +2606,10 @@ export default function Page() {
 
               {/* Casino */}
               <div className="flex flex-col items-center space-y-2">
-                <button className="relative">
+                <button 
+                  className="relative"
+                  onClick={() => window.location.href = '/casino'}
+                >
                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
                       <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
@@ -2364,11 +2644,13 @@ export default function Page() {
             <div className="absolute bottom-24 left-6 right-6 z-20">
               <div className="mb-2">
                 <div className="flex items-center space-x-2 mb-1">
-                  <div className="w-5 h-5 rounded-full bg-red-600 flex items-center justify-center">
-                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
-                  </div>
+                  <Image
+                    src="/Formula 1.svg"
+                    alt="Formula 1"
+                    width={20}
+                    height={20}
+                    className="opacity-80"
+                  />
                   <span className="text-white/60 text-xs">Formula 1 • Monaco Grand Prix</span>
                 </div>
                 <div className="text-white/80 text-xs mb-2">Today 3:00 PM CET</div>
@@ -3386,141 +3668,351 @@ export default function Page() {
       {isMarketsDrawerOpen && (
         <div className="fixed inset-0 z-50 flex items-end justify-center">
           <div className="absolute inset-0 bg-black/50" onClick={() => setIsMarketsDrawerOpen(false)}></div>
-          <div className="relative bg-white rounded-t-3xl w-full max-w-md max-h-[80vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900">More Markets</h2>
+          <div className="relative bg-white rounded-t-3xl w-full max-h-[85vh] flex flex-col">
+            {/* Fixed Header */}
+            <div className="p-4 border-b border-gray-200">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="text-lg font-bold text-gray-900">More Markets</h2>
                 <button 
                   onClick={() => setIsMarketsDrawerOpen(false)}
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-gray-400 hover:text-gray-600"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               </div>
-              
-              <div className="space-y-4">
-                <div className="text-center">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Chiefs vs Bills</h3>
-                  <div className="text-sm text-gray-600 mb-6">Today 8:20 PM EST</div>
-                </div>
+              <div className="text-center">
+                <h3 className="text-base font-semibold text-gray-900">Chiefs vs Bills</h3>
+                <div className="text-xs text-gray-500 mt-1">Today 8:20 PM EST</div>
+              </div>
+            </div>
 
-                {/* Moneyline */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">Moneyline</h4>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button 
-                      onClick={() => {
-                        setCurrentBet({
-                          match: "Chiefs vs Bills",
-                          market: "Moneyline",
-                          selection: "Chiefs",
-                          odds: -120
-                        });
-                        setIsBettingOverlayOpen(true);
-                        setIsMarketsDrawerOpen(false);
-                      }}
-                      className="bg-white border border-gray-200 rounded-lg p-3 text-left hover:bg-gray-50 transition-colors"
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-y-auto p-3 space-y-2">
+              {/* Moneyline */}
+              <div>
+                <h4 className="text-xs font-semibold text-gray-600 mb-1.5">Moneyline</h4>
+                <div className="grid grid-cols-2 gap-1.5">
+                  <button 
+                    onClick={() => {
+                      addLeg({
+                        match: "Chiefs vs Bills",
+                        market: "Moneyline",
+                        selection: "Chiefs",
+                        odds: -120,
+                        stake: 10
+                      });
+                      setIsMarketsDrawerOpen(false);
+                      setIsBetSlipOpen(true);
+                    }}
+                    className="bg-white border border-gray-200 rounded p-2 text-left hover:border-gray-400 transition-colors"
+                  >
+                    <div className="text-xs font-medium text-gray-900">Chiefs</div>
+                    <div className="text-black font-bold text-xs">-120</div>
+                  </button>
+                  <button 
+                    onClick={() => {
+                      addLeg({
+                        match: "Chiefs vs Bills",
+                        market: "Moneyline",
+                        selection: "Bills",
+                        odds: +110,
+                        stake: 10
+                      });
+                      setIsMarketsDrawerOpen(false);
+                      setIsBetSlipOpen(true);
+                    }}
+                    className="bg-white border border-gray-200 rounded p-2 text-left hover:border-gray-400 transition-colors"
+                  >
+                    <div className="text-xs font-medium text-gray-900">Bills</div>
+                    <div className="text-black font-bold text-xs">+110</div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Spread */}
+              <div>
+                <h4 className="text-xs font-semibold text-gray-600 mb-1.5">Spread</h4>
+                <div className="grid grid-cols-2 gap-1.5">
+                  <button 
+                    onClick={() => {
+                      addLeg({
+                        match: "Chiefs vs Bills",
+                        market: "Spread",
+                        selection: "Chiefs -3.5",
+                        odds: -110,
+                        stake: 10
+                      });
+                      setIsMarketsDrawerOpen(false);
+                      setIsBetSlipOpen(true);
+                    }}
+                    className="bg-white border border-gray-200 rounded p-2 text-left hover:border-gray-400 transition-colors"
+                  >
+                    <div className="text-xs font-medium text-gray-900">Chiefs -3.5</div>
+                    <div className="text-black font-bold text-xs">-110</div>
+                  </button>
+                  <button 
+                    onClick={() => {
+                      addLeg({
+                        match: "Chiefs vs Bills",
+                        market: "Spread",
+                        selection: "Bills +3.5",
+                        odds: -110,
+                        stake: 10
+                      });
+                      setIsMarketsDrawerOpen(false);
+                      setIsBetSlipOpen(true);
+                    }}
+                    className="bg-white border border-gray-200 rounded p-2 text-left hover:border-gray-400 transition-colors"
                     >
-                      <div className="font-semibold text-gray-900">Chiefs</div>
-                      <div className="text-blue-600 font-bold">-120</div>
-                    </button>
-                    <button 
-                      onClick={() => {
-                        setCurrentBet({
-                          match: "Chiefs vs Bills",
-                          market: "Moneyline",
-                          selection: "Bills",
-                          odds: +110
-                        });
-                        setIsBettingOverlayOpen(true);
-                        setIsMarketsDrawerOpen(false);
-                      }}
-                      className="bg-white border border-gray-200 rounded-lg p-3 text-left hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="font-semibold text-gray-900">Bills</div>
-                      <div className="text-blue-600 font-bold">+110</div>
+                      <div className="text-xs font-medium text-gray-900">Bills +3.5</div>
+                      <div className="text-black font-bold text-xs">-110</div>
                     </button>
                   </div>
                 </div>
 
-                {/* Spread */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">Spread</h4>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button 
-                      onClick={() => {
-                        setCurrentBet({
-                          match: "Chiefs vs Bills",
-                          market: "Spread",
-                          selection: "Chiefs -3.5",
-                          odds: -110
-                        });
-                        setIsBettingOverlayOpen(true);
-                        setIsMarketsDrawerOpen(false);
-                      }}
-                      className="bg-white border border-gray-200 rounded-lg p-3 text-left hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="font-semibold text-gray-900">Chiefs -3.5</div>
-                      <div className="text-blue-600 font-bold">-110</div>
-                    </button>
-                    <button 
-                      onClick={() => {
-                        setCurrentBet({
-                          match: "Chiefs vs Bills",
-                          market: "Spread",
-                          selection: "Bills +3.5",
-                          odds: -110
-                        });
-                        setIsBettingOverlayOpen(true);
-                        setIsMarketsDrawerOpen(false);
-                      }}
-                      className="bg-white border border-gray-200 rounded-lg p-3 text-left hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="font-semibold text-gray-900">Bills +3.5</div>
-                      <div className="text-blue-600 font-bold">-110</div>
-                    </button>
-                  </div>
+              {/* Total Points */}
+              <div>
+                <h4 className="text-xs font-semibold text-gray-600 mb-1.5">Total Points</h4>
+                <div className="grid grid-cols-2 gap-1.5">
+                  <button 
+                    onClick={() => {
+                      addLeg({
+                        match: "Chiefs vs Bills",
+                        market: "Total Points",
+                        selection: "Over 47.5",
+                        odds: -105,
+                        stake: 10
+                      });
+                      setIsMarketsDrawerOpen(false);
+                      setIsBetSlipOpen(true);
+                    }}
+                    className="bg-white border border-gray-200 rounded p-2 text-left hover:border-gray-400 transition-colors"
+                  >
+                    <div className="text-xs font-medium text-gray-900">Over 47.5</div>
+                    <div className="text-black font-bold text-xs">-105</div>
+                  </button>
+                  <button 
+                    onClick={() => {
+                      addLeg({
+                        match: "Chiefs vs Bills",
+                        market: "Total Points",
+                        selection: "Under 47.5",
+                        odds: -115,
+                        stake: 10
+                      });
+                      setIsMarketsDrawerOpen(false);
+                      setIsBetSlipOpen(true);
+                    }}
+                    className="bg-white border border-gray-200 rounded p-2 text-left hover:border-gray-400 transition-colors"
+                  >
+                    <div className="text-xs font-medium text-gray-900">Under 47.5</div>
+                    <div className="text-black font-bold text-xs">-115</div>
+                  </button>
                 </div>
+              </div>
 
-                {/* Total Points */}
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <h4 className="font-semibold text-gray-900 mb-3">Total Points</h4>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button 
-                      onClick={() => {
-                        setCurrentBet({
-                          match: "Chiefs vs Bills",
-                          market: "Total Points",
-                          selection: "Over 47.5",
-                          odds: -105
-                        });
-                        setIsBettingOverlayOpen(true);
-                        setIsMarketsDrawerOpen(false);
-                      }}
-                      className="bg-white border border-gray-200 rounded-lg p-3 text-left hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="font-semibold text-gray-900">Over 47.5</div>
-                      <div className="text-blue-600 font-bold">-105</div>
-                    </button>
-                    <button 
-                      onClick={() => {
-                        setCurrentBet({
-                          match: "Chiefs vs Bills",
-                          market: "Total Points",
-                          selection: "Under 47.5",
-                          odds: -115
-                        });
-                        setIsBettingOverlayOpen(true);
-                        setIsMarketsDrawerOpen(false);
-                      }}
-                      className="bg-white border border-gray-200 rounded-lg p-3 text-left hover:bg-gray-50 transition-colors"
-                    >
-                      <div className="font-semibold text-gray-900">Under 47.5</div>
-                      <div className="text-blue-600 font-bold">-115</div>
-                    </button>
-                  </div>
+              {/* Player Props */}
+              <div>
+                <h4 className="text-xs font-semibold text-gray-600 mb-1.5">Player Props</h4>
+                <div className="space-y-1.5">
+                  <button 
+                    onClick={() => {
+                      addLeg({
+                        match: "Chiefs vs Bills",
+                        market: "Player Props",
+                        selection: "Patrick Mahomes Over 275.5 Passing Yards",
+                        odds: -110,
+                        stake: 10
+                      });
+                      setIsMarketsDrawerOpen(false);
+                      setIsBetSlipOpen(true);
+                    }}
+                    className="w-full bg-white border border-gray-200 rounded p-2 text-left hover:border-gray-400 transition-colors"
+                  >
+                    <div className="flex justify-between items-center">
+                      <div className="text-xs font-medium text-gray-900">Patrick Mahomes Over 275.5 Passing Yards</div>
+                      <div className="text-black font-bold text-xs">-110</div>
+                    </div>
+                  </button>
+                  <button 
+                    onClick={() => {
+                      addLeg({
+                        match: "Chiefs vs Bills",
+                        market: "Player Props",
+                        selection: "Josh Allen Over 1.5 Passing TDs",
+                        odds: -135,
+                        stake: 10
+                      });
+                      setIsMarketsDrawerOpen(false);
+                      setIsBetSlipOpen(true);
+                    }}
+                    className="w-full bg-white border border-gray-200 rounded p-2 text-left hover:border-gray-400 transition-colors"
+                  >
+                    <div className="flex justify-between items-center">
+                      <div className="text-xs font-medium text-gray-900">Josh Allen Over 1.5 Passing TDs</div>
+                      <div className="text-black font-bold text-xs">-135</div>
+                    </div>
+                  </button>
+                  <button 
+                    onClick={() => {
+                      addLeg({
+                        match: "Chiefs vs Bills",
+                        market: "Player Props",
+                        selection: "Travis Kelce Anytime TD",
+                        odds: +145,
+                        stake: 10
+                      });
+                      setIsMarketsDrawerOpen(false);
+                      setIsBetSlipOpen(true);
+                    }}
+                    className="w-full bg-white border border-gray-200 rounded p-2 text-left hover:border-gray-400 transition-colors"
+                  >
+                    <div className="flex justify-between items-center">
+                      <div className="text-xs font-medium text-gray-900">Travis Kelce Anytime TD</div>
+                      <div className="text-black font-bold text-xs">+145</div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Game Props */}
+              <div>
+                <h4 className="text-xs font-semibold text-gray-600 mb-1.5">Game Props</h4>
+                <div className="space-y-1.5">
+                  <button 
+                    onClick={() => {
+                      addLeg({
+                        match: "Chiefs vs Bills",
+                        market: "Game Props",
+                        selection: "Both Teams to Score 20+",
+                        odds: +165,
+                        stake: 10
+                      });
+                      setIsMarketsDrawerOpen(false);
+                      setIsBetSlipOpen(true);
+                    }}
+                    className="w-full bg-white border border-gray-200 rounded p-2 text-left hover:border-gray-400 transition-colors"
+                  >
+                    <div className="flex justify-between items-center">
+                      <div className="text-xs font-medium text-gray-900">Both Teams to Score 20+</div>
+                      <div className="text-black font-bold text-xs">+165</div>
+                    </div>
+                  </button>
+                  <button 
+                    onClick={() => {
+                      addLeg({
+                        match: "Chiefs vs Bills",
+                        market: "Game Props",
+                        selection: "Game Goes to Overtime",
+                        odds: +850,
+                        stake: 10
+                      });
+                      setIsMarketsDrawerOpen(false);
+                      setIsBetSlipOpen(true);
+                    }}
+                    className="w-full bg-white border border-gray-200 rounded p-2 text-left hover:border-gray-400 transition-colors"
+                  >
+                    <div className="flex justify-between items-center">
+                      <div className="text-xs font-medium text-gray-900">Game Goes to Overtime</div>
+                      <div className="text-black font-bold text-xs">+850</div>
+                    </div>
+                  </button>
+                  <button 
+                    onClick={() => {
+                      addLeg({
+                        match: "Chiefs vs Bills",
+                        market: "Game Props",
+                        selection: "Winning Margin 1-6 Points",
+                        odds: +210,
+                        stake: 10
+                      });
+                      setIsMarketsDrawerOpen(false);
+                      setIsBetSlipOpen(true);
+                    }}
+                    className="w-full bg-white border border-gray-200 rounded p-2 text-left hover:border-gray-400 transition-colors"
+                  >
+                    <div className="flex justify-between items-center">
+                      <div className="text-xs font-medium text-gray-900">Winning Margin 1-6 Points</div>
+                      <div className="text-black font-bold text-xs">+210</div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Half Time / Full Time */}
+              <div>
+                <h4 className="text-xs font-semibold text-gray-600 mb-1.5">Halftime/Fulltime</h4>
+                <div className="grid grid-cols-2 gap-1.5">
+                  <button 
+                    onClick={() => {
+                      addLeg({
+                        match: "Chiefs vs Bills",
+                        market: "Halftime/Fulltime",
+                        selection: "Chiefs/Chiefs",
+                        odds: +180,
+                        stake: 10
+                      });
+                      setIsMarketsDrawerOpen(false);
+                      setIsBetSlipOpen(true);
+                    }}
+                    className="bg-white border border-gray-200 rounded p-2 text-left hover:border-gray-400 transition-colors"
+                  >
+                    <div className="text-xs font-medium text-gray-900">Chiefs/Chiefs</div>
+                    <div className="text-black font-bold text-xs">+180</div>
+                  </button>
+                  <button 
+                    onClick={() => {
+                      addLeg({
+                        match: "Chiefs vs Bills",
+                        market: "Halftime/Fulltime",
+                        selection: "Bills/Bills",
+                        odds: +220,
+                        stake: 10
+                      });
+                      setIsMarketsDrawerOpen(false);
+                      setIsBetSlipOpen(true);
+                    }}
+                    className="bg-white border border-gray-200 rounded p-2 text-left hover:border-gray-400 transition-colors"
+                  >
+                    <div className="text-xs font-medium text-gray-900">Bills/Bills</div>
+                    <div className="text-black font-bold text-xs">+220</div>
+                  </button>
+                  <button 
+                    onClick={() => {
+                      addLeg({
+                        match: "Chiefs vs Bills",
+                        market: "Halftime/Fulltime",
+                        selection: "Chiefs/Bills",
+                        odds: +650,
+                        stake: 10
+                      });
+                      setIsMarketsDrawerOpen(false);
+                      setIsBetSlipOpen(true);
+                    }}
+                    className="bg-white border border-gray-200 rounded p-2 text-left hover:border-gray-400 transition-colors"
+                  >
+                    <div className="text-xs font-medium text-gray-900">Chiefs/Bills</div>
+                    <div className="text-black font-bold text-xs">+650</div>
+                  </button>
+                  <button 
+                    onClick={() => {
+                      addLeg({
+                        match: "Chiefs vs Bills",
+                        market: "Halftime/Fulltime",
+                        selection: "Bills/Chiefs",
+                        odds: +700,
+                        stake: 10
+                      });
+                      setIsMarketsDrawerOpen(false);
+                      setIsBetSlipOpen(true);
+                    }}
+                    className="bg-white border border-gray-200 rounded p-2 text-left hover:border-gray-400 transition-colors"
+                  >
+                    <div className="text-xs font-medium text-gray-900">Bills/Chiefs</div>
+                    <div className="text-black font-bold text-xs">+700</div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -3578,11 +4070,13 @@ export default function Page() {
                   </button>
 
                   {/* Casino */}
-                  <button className="w-full flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-colors text-left">
+                  <button 
+                    onClick={() => window.location.href = '/casino'}
+                    className="w-full flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-colors text-left"
+                  >
                     <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
                       <svg className="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
-                        <circle cx="12" cy="12" r="2"/>
                       </svg>
                     </div>
                     <div>
@@ -3591,19 +4085,19 @@ export default function Page() {
                     </div>
                   </button>
 
-                  {/* Sports */}
+                  {/* Personalization */}
                   <button
                     onClick={() => setShowSportsLeagues(true)}
                     className="w-full flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-colors text-left"
                   >
-                    <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                      <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center">
+                      <svg className="w-5 h-5 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
                     </div>
                     <div className="flex-1">
-                      <div className="font-semibold text-gray-900">Sports</div>
-                      <div className="text-sm text-gray-500">All sports leagues</div>
+                      <div className="font-semibold text-gray-900">Personalization</div>
+                      <div className="text-sm text-gray-500">Customize your feed</div>
                     </div>
                     <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
