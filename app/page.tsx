@@ -60,6 +60,8 @@ export default function Page() {
     laLiga: true,
     ufc: true,
   });
+  const [favoriteTeams, setFavoriteTeams] = useState<string[]>([]);
+  const [showFavourites, setShowFavourites] = useState(false);
 
   const reels = [
     // Onboarding / Landing Page
@@ -1041,7 +1043,7 @@ export default function Page() {
                 </button>
               </div>
               <div className="flex flex-col items-center space-y-2">
-                <button className="relative">
+                <button className="relative" onClick={() => window.location.href = "/casino"}>
                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
                       <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
@@ -1189,7 +1191,7 @@ export default function Page() {
                 </button>
               </div>
               <div className="flex flex-col items-center space-y-2">
-                <button className="relative">
+                <button className="relative" onClick={() => window.location.href = "/casino"}>
                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
                       <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
@@ -1550,7 +1552,7 @@ export default function Page() {
               </button>
 
               <div className="flex flex-col items-center space-y-2">
-                <button className="relative">
+                <button className="relative" onClick={() => window.location.href = "/casino"}>
                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
                       <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
@@ -1887,7 +1889,7 @@ export default function Page() {
               </button>
 
               <div className="flex flex-col items-center space-y-2">
-                <button className="relative">
+                <button className="relative" onClick={() => window.location.href = "/casino"}>
                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
                       <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
@@ -2057,7 +2059,7 @@ export default function Page() {
               </button>
 
               <div className="flex flex-col items-center space-y-2">
-                <button className="relative">
+                <button className="relative" onClick={() => window.location.href = "/casino"}>
                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
                       <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
@@ -2790,7 +2792,10 @@ export default function Page() {
               </div>
 
               <div className="flex flex-col items-center space-y-2">
-                <button className="relative">
+                <button 
+                  className="relative"
+                  onClick={() => window.location.href = '/casino'}
+                >
                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
                       <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
@@ -2951,7 +2956,7 @@ export default function Page() {
               </div>
 
               <div className="flex flex-col items-center space-y-2">
-                <button className="relative">
+                <button className="relative" onClick={() => window.location.href = "/casino"}>
                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
                       <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
@@ -3158,7 +3163,7 @@ export default function Page() {
               </div>
 
               <div className="flex flex-col items-center space-y-2">
-                <button className="relative">
+                <button className="relative" onClick={() => window.location.href = "/casino"}>
                   <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                     <svg className="w-6 h-6 text-white" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
                       <path d="M15.4706 14.1249L16.2456 11.3249C16.3123 11.1249 16.3081 10.9249 16.2331 10.7249C16.1581 10.5249 16.0289 10.3582 15.8456 10.2249L13.4706 8.59991C13.3373 8.49991 13.1914 8.47907 13.0331 8.53741C12.8748 8.59574 12.7706 8.70824 12.7206 8.87491L11.9456 11.6749C11.8789 11.8749 11.8831 12.0749 11.9581 12.2749C12.0331 12.4749 12.1623 12.6416 12.3456 12.7749L14.7206 14.3999C14.8539 14.4999 14.9998 14.5207 15.1581 14.4624C15.3164 14.4041 15.4206 14.2916 15.4706 14.1249ZM4.09561 18.8249L3.27061 18.4249C2.75394 18.2082 2.40394 17.8374 2.22061 17.3124C2.03728 16.7874 2.06228 16.2666 2.29561 15.7499L4.09561 11.8499V18.8249ZM8.09561 20.9999C7.54561 20.9999 7.07478 20.7999 6.68311 20.3999C6.29144 19.9999 6.09561 19.5249 6.09561 18.9749V12.9999L8.77061 20.3499C8.82061 20.4666 8.86228 20.5791 8.89561 20.6874C8.92894 20.7957 8.98728 20.8999 9.07061 20.9999H8.09561ZM13.2456 20.8749C12.7289 21.0582 12.2123 21.0332 11.6956 20.7999C11.1789 20.5666 10.8289 20.1916 10.6456 19.6749L6.22061 7.44991C6.03728 6.93324 6.06228 6.42074 6.29561 5.91241C6.52894 5.40407 6.90394 5.05824 7.42061 4.87491L14.9456 2.12491C15.4623 1.94157 15.9748 1.96657 16.4831 2.19991C16.9914 2.43324 17.3373 2.80824 17.5206 3.32491L21.9706 15.5499C22.1539 16.0666 22.1289 16.5791 21.8956 17.0874C21.6623 17.5957 21.2873 17.9416 20.7706 18.1249L13.2456 20.8749Z"/>
@@ -4051,11 +4056,11 @@ export default function Page() {
 
             {/* Menu Items */}
             <div className="p-4 space-y-2 overflow-y-auto flex-1 min-h-0">
-              {!showSportsLeagues ? (
+              {!showSportsLeagues && !showFavourites ? (
                 <>
                   {/* My Favourites */}
                   <button
-                    onClick={() => setIsBetSlipOpen(true)}
+                    onClick={() => setShowFavourites(true)}
                     className="w-full flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-colors text-left"
                   >
                     <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center">
@@ -4063,10 +4068,13 @@ export default function Page() {
                         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                       </svg>
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <div className="font-semibold text-gray-900">My Favourites</div>
                       <div className="text-sm text-gray-500">Your liked reels</div>
                     </div>
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
                   </button>
 
                   {/* Casino */}
@@ -4146,78 +4154,192 @@ export default function Page() {
                     </div>
                   </button>
                 </>
-              ) : (
+              ) : showFavourites ? (
+                <>
+                  {/* Back Button */}
+                  <button
+                    onClick={() => setShowFavourites(false)}
+                    className="w-full flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors text-left mb-3"
+                  >
+                    <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <div className="font-semibold text-gray-900">My Favourites</div>
+                  </button>
+
+                  {/* Liked Reels */}
+                  {likedReels.size === 0 ? (
+                    <div className="text-center py-12 px-4">
+                      <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                      </svg>
+                      <p className="text-gray-500 text-sm">No favourite reels yet</p>
+                      <p className="text-gray-400 text-xs mt-1">Like reels to see them here</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {Array.from(likedReels).map(reelId => {
+                        const reel = reels.find(r => r.id === reelId);
+                        const reelNames: Record<string, string> = {
+                          'salah-first-goal': 'Salah First Goal',
+                          'chiefs-parlay': 'Chiefs Parlay',
+                          'kelce-first-td': 'Kelce First TD',
+                          'blackjack': 'Blackjack',
+                          'rabid-randy-slot': 'Rabid Randy Slot',
+                          'wheel-of-fortune': 'Wheel of Fortune',
+                          'boxing-interest': 'Boxing Interest',
+                          'live-soccer-game': 'Live: Arsenal vs Chelsea',
+                          'monaco-f1': 'Monaco Grand Prix',
+                          'masters-golf': 'Masters Tournament',
+                          'kentucky-derby': 'Kentucky Derby'
+                        };
+                        
+                        return (
+                          <div key={reelId} className="flex items-center justify-between p-3 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors group">
+                            <button
+                              onClick={() => {
+                                setLikedReels(prev => {
+                                  const newSet = new Set(prev);
+                                  newSet.delete(reelId);
+                                  return newSet;
+                                });
+                              }}
+                              className="w-8 h-8 rounded-full bg-pink-500 flex items-center justify-center hover:bg-pink-600 transition-colors flex-shrink-0"
+                            >
+                              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                              </svg>
+                            </button>
+                            <button
+                              onClick={() => {
+                                const index = reels.findIndex(r => r.id === reelId);
+                                if (index !== -1) {
+                                  const swiperEl = document.querySelector('.swiper') as any;
+                                  if (swiperEl?.swiper) {
+                                    swiperEl.swiper.slideTo(index);
+                                    setIsMenuDrawerOpen(false);
+                                    setShowFavourites(false);
+                                  }
+                                }
+                              }}
+                              className="flex-1 flex items-center justify-between ml-3 text-left"
+                            >
+                              <div className="font-medium text-gray-900 text-sm">{reelNames[reelId] || reelId}</div>
+                              <svg className="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </>
+              ) : showSportsLeagues ? (
                 <>
                   {/* Back Button */}
                   <button
                     onClick={() => setShowSportsLeagues(false)}
-                    className="w-full flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-colors text-left mb-4"
+                    className="w-full flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors text-left mb-3"
                   >
-                    <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                      <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                      </svg>
-                    </div>
-                    <div>
-                      <div className="font-semibold text-gray-900">Back to Menu</div>
-                    </div>
+                    <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                    <div className="font-semibold text-gray-900">Personalization</div>
                   </button>
 
-                  {/* Sports Leagues */}
-                  <div className="space-y-2">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Sports Leagues</h3>
-                    
-                    {/* Premier League */}
-                    <button className="w-full flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-colors text-left">
-                      <Image src="/Premier League.svg" alt="Premier League" width={32} height={32} />
-                      <div>
-                        <div className="font-semibold text-gray-900">Premier League</div>
-                        <div className="text-sm text-gray-500">English football</div>
-                      </div>
-                    </button>
+                  {/* Search Bar */}
+                  <div className="mb-4 px-2">
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="Search teams..."
+                        className="w-full px-4 py-2.5 pl-10 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                      />
+                      <svg className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                  </div>
 
-                    {/* NFL */}
-                    <button className="w-full flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-colors text-left">
-                      <Image src="/NFL.svg" alt="NFL" width={32} height={32} />
-                      <div>
-                        <div className="font-semibold text-gray-900">NFL</div>
-                        <div className="text-sm text-gray-500">American football</div>
-                      </div>
-                    </button>
+                  {/* Sports Section */}
+                  <div className="mb-10">
+                    <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider px-2 mb-4">Sports</h3>
+                    <div className="flex flex-wrap gap-2.5 px-2">
+                      {[
+                        { key: 'football', label: 'Football' },
+                        { key: 'basketball', label: 'Basketball' },
+                        { key: 'tennis', label: 'Tennis' },
+                        { key: 'boxing', label: 'Boxing' },
+                        { key: 'mma', label: 'MMA' }
+                      ].map(sport => (
+                        <button
+                          key={sport.key}
+                          onClick={() => setPreferences(prev => ({ ...prev, [sport.key]: !prev[sport.key as keyof typeof prev] }))}
+                          className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                            preferences[sport.key as keyof typeof preferences] 
+                              ? 'bg-black text-white' 
+                              : 'bg-gray-100 text-gray-700 border border-gray-200'
+                          }`}
+                        >
+                          {sport.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
-                    {/* NBA */}
-                    <button className="w-full flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-colors text-left">
-                      <Image src="/NBA.svg" alt="NBA" width={32} height={32} />
-                      <div>
-                        <div className="font-semibold text-gray-900">NBA</div>
-                        <div className="text-sm text-gray-500">Basketball</div>
-                      </div>
-                    </button>
+                  {/* Leagues Section */}
+                  <div className="mb-10">
+                    <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider px-2 mb-4">Leagues</h3>
+                    <div className="flex flex-wrap gap-2.5 px-2">
+                      {[
+                        { key: 'premierLeague', label: 'Premier League' },
+                        { key: 'nfl', label: 'NFL' },
+                        { key: 'nba', label: 'NBA' },
+                        { key: 'championsLeague', label: 'Champions League' },
+                        { key: 'laLiga', label: 'La Liga' },
+                        { key: 'ufc', label: 'UFC' }
+                      ].map(league => (
+                        <button
+                          key={league.key}
+                          onClick={() => setPreferences(prev => ({ ...prev, [league.key]: !prev[league.key as keyof typeof prev] }))}
+                          className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                            preferences[league.key as keyof typeof preferences] 
+                              ? 'bg-black text-white' 
+                              : 'bg-gray-100 text-gray-700 border border-gray-200'
+                          }`}
+                        >
+                          {league.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
-                    {/* Champions League */}
-                    <button className="w-full flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-colors text-left">
-                      <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
-                        <span className="text-white text-xs font-bold">CL</span>
-                      </div>
-                      <div>
-                        <div className="font-semibold text-gray-900">Champions League</div>
-                        <div className="text-sm text-gray-500">European football</div>
-                      </div>
-                    </button>
-
-                    {/* La Liga */}
-                    <button className="w-full flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-colors text-left">
-                      <div className="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center">
-                        <span className="text-white text-xs font-bold">LL</span>
-                      </div>
-                      <div>
-                        <div className="font-semibold text-gray-900">La Liga</div>
-                        <div className="text-sm text-gray-500">Spanish football</div>
-                      </div>
-                    </button>
+                  {/* Popular Teams Section */}
+                  <div className="mb-6">
+                    <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider px-2 mb-4">Popular Teams</h3>
+                    <div className="flex flex-wrap gap-2.5 px-2">
+                      {['Liverpool', 'Man City', 'Real Madrid', 'Barcelona', 'Bayern Munich', 'PSG', 'Chiefs', 'Lakers', 'Warriors'].map(team => (
+                        <button 
+                          key={team}
+                          onClick={() => {
+                            setFavoriteTeams(prev => 
+                              prev.includes(team) ? prev.filter(t => t !== team) : [...prev, team]
+                            );
+                          }}
+                          className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                            favoriteTeams.includes(team)
+                              ? 'bg-black text-white'
+                              : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'
+                          }`}
+                        >
+                          {team}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </>
-              )}
+              ) : null}
             </div>
           </div>
         </div>
