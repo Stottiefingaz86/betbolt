@@ -7,7 +7,7 @@ import "swiper/css/mousewheel";
 
 type Reel = { id: string; render: (active: boolean, reelId: string) => React.ReactNode; };
 
-export default function ReelsSwiper({ items }: { items: Reel[] }) {
+export default function ReelsSwiper({ items, onSlideChange }: { items: Reel[]; onSlideChange?: (index: number) => void }) {
   const ref = useRef<any>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   
@@ -24,6 +24,7 @@ export default function ReelsSwiper({ items }: { items: Reel[] }) {
         style={{ height: "100%" }}
         onSlideChange={(swiper) => {
           setActiveIndex(swiper.activeIndex);
+          onSlideChange?.(swiper.activeIndex);
         }}
       >
         {items.map((r, index) => (

@@ -8,7 +8,6 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'BetBolt - Sports Reels & Casino',
   description: 'Mobile-first sports betting with TikTok-style reels',
-  themeColor: '#000000',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content',
   appleWebApp: {
     capable: true,
@@ -30,6 +29,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="dark" style={{ margin: 0, padding: 0, border: 0, outline: 0 }}>
+      <head>
+        <meta name="theme-color" content="transparent" />
+      </head>
       <body className={inter.className} style={{ margin: 0, padding: 0, border: 0, outline: 0, overflow: 'hidden' }}>
         <Providers>
           {children}

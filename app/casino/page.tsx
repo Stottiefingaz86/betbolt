@@ -12,25 +12,35 @@ export default function CasinoPage() {
   const [isBalanceDrawerOpen, setIsBalanceDrawerOpen] = useState(false);
 
   useEffect(() => {
-    // Override body styles for casino page
-    const originalOverflow = document.body.style.overflow;
-    const originalPosition = document.body.style.position;
-    const originalHeight = document.body.style.height;
+    // Force override body styles for casino page - must be visible and scrollable
+    const html = document.documentElement;
+    const body = document.body;
     
-    document.body.style.overflow = 'auto';
-    document.body.style.position = 'static';
-    document.body.style.height = 'auto';
+    // Store original styles
+    const originalBodyOverflow = body.style.overflow;
+    const originalBodyPosition = body.style.position;
+    const originalBodyHeight = body.style.height;
+    const originalHtmlOverflow = html.style.overflow;
+    
+    // Force scrollable state - use setProperty with important flag
+    body.style.setProperty('overflow', 'auto', 'important');
+    body.style.setProperty('position', 'static', 'important');
+    body.style.setProperty('height', 'auto', 'important');
+    html.style.setProperty('overflow', 'auto', 'important');
+    
+    // Also remove any classes that might prevent scrolling
+    body.classList.remove('overflow-hidden');
+    html.classList.remove('overflow-hidden');
     
     // Scroll listener to detect when sub-nav touches header
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const scrollingUp = scrollY < lastScrollY;
       
-      // Hide elements when sub-nav touches header (around 40px scroll)
-      if (scrollY > 40) {
-        setIsSubNavSticky(true); // Hide elements
+      // Hide logo and balance when scrolling down (around 80px scroll)
+      if (scrollY > 80) {
+        setIsSubNavSticky(true);
       } else {
-        setIsSubNavSticky(false); // Show elements
+        setIsSubNavSticky(false);
       }
       
       setLastScrollY(scrollY);
@@ -40,12 +50,13 @@ export default function CasinoPage() {
     
     // Cleanup on unmount
     return () => {
-      document.body.style.overflow = originalOverflow;
-      document.body.style.position = originalPosition;
-      document.body.style.height = originalHeight;
+      body.style.overflow = originalBodyOverflow;
+      body.style.position = originalBodyPosition;
+      body.style.height = originalBodyHeight;
+      html.style.overflow = originalHtmlOverflow;
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [lastScrollY]);
 
   const toggleLike = (gameId: string) => {
     setLikedGames(prev => {
@@ -59,16 +70,45 @@ export default function CasinoPage() {
     });
   };
 
-  const GameTile = ({ game, isLiked, onLikeToggle }: any) => {
+  const ModuleTile = () => {
     return (
-      <div className="relative flex-shrink-0 w-36 h-48 rounded-lg overflow-hidden bg-gray-800/50 hover:bg-gray-700/50 transition-all duration-200 cursor-pointer group shadow-lg">
-        {/* Game Content */}
-        <div className="absolute inset-0 p-3 flex items-center justify-center">
-          <h3 className="text-white font-bold text-sm text-center">{game.title}</h3>
-        </div>
+      <div className="relative flex-shrink-0 w-72 h-36 rounded-lg overflow-hidden cursor-pointer group shadow-lg">
+        {/* Module Image (2x width) */}
+        <img
+          src="/Tile_module.png"
+          alt="Live Roulette"
+          loading="lazy"
+          className="w-full h-full object-cover"
+        />
 
-        {/* Play Button Overlay */}
-        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+        {/* Play Button Overlay on Hover */}
+        <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+          <button className="bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors flex items-center space-x-2">
+            <Play size={16} />
+            <span>Play</span>
+          </button>
+        </div>
+      </div>
+    );
+  };
+
+  const GameTile = ({ game, isLiked, onLikeToggle, index }: any) => {
+    // Cycle through the 6 tiles
+    const tileNumber = (index % 6) + 1;
+    const tileImage = `/Tile${tileNumber}.png`;
+    
+    return (
+      <div className="relative flex-shrink-0 w-36 h-36 rounded-lg overflow-hidden cursor-pointer group shadow-lg">
+        {/* Tile Image */}
+        <img
+          src={tileImage}
+          alt={game.title}
+          loading="lazy"
+          className="w-full h-full object-cover"
+        />
+
+        {/* Play Button Overlay on Hover */}
+        <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
           <button className="bg-white text-black px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors flex items-center space-x-2">
             <Play size={16} />
             <span>Play</span>
@@ -145,24 +185,40 @@ export default function CasinoPage() {
 
   const currentGames = casinoGames[activeTab as keyof typeof casinoGames] || [];
 
+  // Add CSS override in useEffect
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      html, body {
+        overflow: auto !important;
+        height: auto !important;
+        position: static !important;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   return (
     <div 
-      className="casino-page bg-gradient-to-br from-purple-900/30 via-black to-purple-800/20 text-white min-h-screen"
-      style={{
-        position: 'relative',
-        overflow: 'auto',
-        height: 'auto',
-        minHeight: '100vh',
-        width: '100%',
-        top: 'auto',
-        left: 'auto',
-        margin: 0,
-        padding: 0
-      }}
-    >
-      {/* Header - Same as Reels */}
-      <div className={`fixed top-0 left-0 right-0 z-50 transition-opacity duration-300 ${isSubNavSticky ? 'opacity-0' : 'opacity-100'}`}>
-        <div className="flex items-center justify-between px-4 py-4">
+        className="casino-page bg-gradient-to-br from-purple-900/30 via-black to-purple-800/20 text-white min-h-screen"
+        style={{
+          position: 'relative',
+          overflow: 'auto',
+          height: 'auto',
+          minHeight: '100vh',
+          width: '100%',
+          top: 'auto',
+          left: 'auto',
+          margin: 0,
+          padding: 0
+        }}
+      >
+      {/* Header - Logo and Balance */}
+      <div className="relative top-0 left-0 right-0 z-40 pt-4" style={{background: 'transparent'}}>
+        <div className="flex items-center justify-between px-4 pb-4" style={{background: 'transparent'}}>
           {/* Back Arrow and Logo - Top Left */}
           <div className="flex items-center space-x-3">
             <Link href="/" className="text-white hover:text-gray-300 transition-colors">
@@ -204,26 +260,9 @@ export default function CasinoPage() {
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="pt-16 px-2 pb-20 relative">
-        {/* Enhanced Purple Glow Effects */}
-        <div className="absolute top-0 left-0 right-0 h-96 bg-gradient-to-b from-purple-500/30 to-transparent pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 right-0 h-96 bg-gradient-to-t from-purple-600/25 to-transparent pointer-events-none"></div>
-        <div className="absolute top-1/2 left-0 right-0 h-96 bg-gradient-to-r from-purple-400/15 via-transparent to-purple-400/15 pointer-events-none"></div>
-        
-        {/* Additional Glow Effects */}
-        <div className="absolute top-20 left-1/4 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute top-40 right-1/4 w-48 h-48 bg-pink-500/20 rounded-full blur-2xl pointer-events-none"></div>
-        <div className="absolute bottom-40 left-1/3 w-56 h-56 bg-violet-500/20 rounded-full blur-3xl pointer-events-none"></div>
-        <div className="absolute bottom-20 right-1/3 w-40 h-40 bg-purple-400/25 rounded-full blur-2xl pointer-events-none"></div>
-        
-        {/* Animated Glow Orbs */}
-        <div className="absolute top-32 left-1/2 w-32 h-32 bg-purple-500/30 rounded-full blur-2xl pointer-events-none animate-pulse"></div>
-        <div className="absolute bottom-32 right-1/2 w-24 h-24 bg-pink-400/30 rounded-full blur-xl pointer-events-none animate-pulse" style={{animationDelay: '1s'}}></div>
-
-        {/* Sub Navigation */}
-        <div className="sticky top-0 mt-8 mb-6 z-50">
-          <div className="flex space-x-1 bg-black/20 backdrop-blur-md border border-white/20 p-1 rounded-lg overflow-x-auto scrollbar-hide">
+      {/* Sub Navigation */}
+      <div className="sticky top-0 z-50 px-2 mb-6">
+        <div className="flex space-x-1 bg-black/20 backdrop-blur-md border border-white/20 p-1 rounded-lg overflow-x-auto scrollbar-hide">
             {subNavItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -244,15 +283,19 @@ export default function CasinoPage() {
           </div>
         </div>
 
+      {/* Main Content */}
+      <div className="px-2 pb-20">
         <div className="space-y-8 pb-32">
           {/* Featured Games Carousel */}
           <div>
             <h2 className="text-lg font-black mb-4 text-white">Featured Games</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
-              {casinoGames['for-you'].map((game) => (
+              <ModuleTile />
+              {casinoGames['for-you'].map((game, index) => (
                 <GameTile
                   key={game.id}
                   game={game}
+                  index={index}
                   isLiked={likedGames.has(game.id)}
                   onLikeToggle={toggleLike}
                 />
@@ -264,10 +307,11 @@ export default function CasinoPage() {
           <div>
             <h2 className="text-lg font-black mb-4 text-white">Slots</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
-              {casinoGames['slots'].map((game) => (
+              {casinoGames['slots'].map((game, index) => (
                 <GameTile
                   key={game.id}
                   game={game}
+                  index={index}
                   isLiked={likedGames.has(game.id)}
                   onLikeToggle={toggleLike}
                 />
@@ -279,10 +323,11 @@ export default function CasinoPage() {
           <div>
             <h2 className="text-lg font-black mb-4 text-white">Live Casino</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
-              {casinoGames['live'].map((game) => (
+              {casinoGames['live'].map((game, index) => (
                 <GameTile
                   key={game.id}
                   game={game}
+                  index={index}
                   isLiked={likedGames.has(game.id)}
                   onLikeToggle={toggleLike}
                 />
@@ -294,10 +339,11 @@ export default function CasinoPage() {
           <div>
             <h2 className="text-lg font-black mb-4 text-white">Bonus Games</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
-              {casinoGames['bonus'].map((game) => (
+              {casinoGames['bonus'].map((game, index) => (
                 <GameTile
                   key={game.id}
                   game={game}
+                  index={index}
                   isLiked={likedGames.has(game.id)}
                   onLikeToggle={toggleLike}
                 />
@@ -309,10 +355,11 @@ export default function CasinoPage() {
           <div>
             <h2 className="text-lg font-black mb-4 text-white">Jackpots</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
-              {casinoGames['jackpots'].map((game) => (
+              {casinoGames['jackpots'].map((game, index) => (
                 <GameTile
                   key={game.id}
                   game={game}
+                  index={index}
                   isLiked={likedGames.has(game.id)}
                   onLikeToggle={toggleLike}
                 />
@@ -324,10 +371,11 @@ export default function CasinoPage() {
           <div>
             <h2 className="text-lg font-black mb-4 text-white">Table Games</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
-              {casinoGames['table'].map((game) => (
+              {casinoGames['table'].map((game, index) => (
                 <GameTile
                   key={game.id}
                   game={game}
+                  index={index}
                   isLiked={likedGames.has(game.id)}
                   onLikeToggle={toggleLike}
                 />
@@ -339,10 +387,11 @@ export default function CasinoPage() {
           <div>
             <h2 className="text-lg font-black mb-4 text-white">BetBolt Originals</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
-              {casinoGames['originals'].map((game) => (
+              {casinoGames['originals'].map((game, index) => (
                 <GameTile
                   key={game.id}
                   game={game}
+                  index={index}
                   isLiked={likedGames.has(game.id)}
                   onLikeToggle={toggleLike}
                 />
@@ -354,10 +403,11 @@ export default function CasinoPage() {
           <div>
             <h2 className="text-lg font-black mb-4 text-white">Popular Games</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
-              {casinoGames['for-you'].slice(0, 8).map((game) => (
+              {casinoGames['for-you'].slice(0, 8).map((game, index) => (
                 <GameTile
                   key={`popular-${game.id}`}
                   game={game}
+                  index={index + 10}
                   isLiked={likedGames.has(game.id)}
                   onLikeToggle={toggleLike}
                 />
@@ -369,10 +419,11 @@ export default function CasinoPage() {
           <div>
             <h2 className="text-lg font-black mb-4 text-white">New Releases</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
-              {casinoGames['slots'].slice(0, 6).map((game) => (
+              {casinoGames['slots'].slice(0, 6).map((game, index) => (
                 <GameTile
                   key={`new-${game.id}`}
                   game={game}
+                  index={index + 20}
                   isLiked={likedGames.has(game.id)}
                   onLikeToggle={toggleLike}
                 />
@@ -384,10 +435,11 @@ export default function CasinoPage() {
           <div>
             <h2 className="text-lg font-black mb-4 text-white">High RTP Games</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
-              {casinoGames['table'].map((game) => (
+              {casinoGames['table'].map((game, index) => (
                 <GameTile
                   key={`high-rtp-${game.id}`}
                   game={game}
+                  index={index + 30}
                   isLiked={likedGames.has(game.id)}
                   onLikeToggle={toggleLike}
                 />
@@ -399,7 +451,7 @@ export default function CasinoPage() {
           <div>
             <h2 className="text-lg font-black mb-4 text-white">Trending Now</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
-              {casinoGames['bonus'].slice(0, 5).map((game) => (
+              {casinoGames['bonus'].slice(0, 5).map((game, index) => (
                 <GameTile
                   key={`trending-${game.id}`}
                   game={game}
@@ -414,7 +466,7 @@ export default function CasinoPage() {
           <div>
             <h2 className="text-lg font-black mb-4 text-white">Live Dealers</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
-              {casinoGames['live'].slice(0, 4).map((game) => (
+              {casinoGames['live'].slice(0, 4).map((game, index) => (
                 <GameTile
                   key={`live-${game.id}`}
                   game={game}
@@ -429,7 +481,7 @@ export default function CasinoPage() {
           <div>
             <h2 className="text-lg font-black mb-4 text-white">Progressive Jackpots</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
-              {casinoGames['jackpots'].map((game) => (
+              {casinoGames['jackpots'].map((game, index) => (
                 <GameTile
                   key={`progressive-${game.id}`}
                   game={game}
@@ -444,7 +496,7 @@ export default function CasinoPage() {
           <div>
             <h2 className="text-lg font-black mb-4 text-white">Classic Games</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
-              {casinoGames['slots'].slice(2, 8).map((game) => (
+              {casinoGames['slots'].slice(2, 8).map((game, index) => (
                 <GameTile
                   key={`classic-${game.id}`}
                   game={game}
@@ -459,7 +511,7 @@ export default function CasinoPage() {
           <div>
             <h2 className="text-lg font-black mb-4 text-white">VIP Games</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
-              {casinoGames['originals'].map((game) => (
+              {casinoGames['originals'].map((game, index) => (
                 <GameTile
                   key={`vip-${game.id}`}
                   game={game}
@@ -474,7 +526,7 @@ export default function CasinoPage() {
           <div>
             <h2 className="text-lg font-black mb-4 text-white">Mobile Optimized</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
-              {casinoGames['for-you'].slice(2, 7).map((game) => (
+              {casinoGames['for-you'].slice(2, 7).map((game, index) => (
                 <GameTile
                   key={`mobile-${game.id}`}
                   game={game}

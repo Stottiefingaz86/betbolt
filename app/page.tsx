@@ -1,7 +1,7 @@
 "use client";
 import { useViewportHeight } from "@/hooks/useViewportHeight";
 import ReelsSwiper from "@/components/ReelsSwiper";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { BetSlip365 } from "@/components/betslip/BetSlip365";
 import { useBetSlipStore } from "@/lib/store/bet-slip";
 import LiquidEther from "@/components/LiquidEther";
@@ -11,6 +11,7 @@ import BetterWheel, { BetterWheelRef } from "@/components/BetterWheel";
 
 export default function Page() {
   useViewportHeight();
+  const [currentReelIndex, setCurrentReelIndex] = useState(0);
   const [isBetSlipOpen, setIsBetSlipOpen] = useState(false);
   const [isBettingOverlayOpen, setIsBettingOverlayOpen] = useState(false);
   const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
@@ -62,6 +63,14 @@ export default function Page() {
   });
   const [favoriteTeams, setFavoriteTeams] = useState<string[]>([]);
   const [showFavourites, setShowFavourites] = useState(false);
+
+  // Update theme color to transparent for all reels
+  useEffect(() => {
+    const metaThemeColor = document.querySelector("meta[name='theme-color']");
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute("content", "rgba(0, 0, 0, 0.01)");
+    }
+  }, []);
 
   const reels = [
     // Onboarding / Landing Page
@@ -3288,7 +3297,10 @@ export default function Page() {
         zIndex: 1
       }}
     >
-      <ReelsSwiper items={reels} />
+      <ReelsSwiper 
+        items={reels} 
+        onSlideChange={(index) => setCurrentReelIndex(index)}
+      />
       
       {/* My Bets Modal */}
       {isBetSlipOpen && (
