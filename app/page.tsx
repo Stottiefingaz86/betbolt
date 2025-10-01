@@ -3702,6 +3702,7 @@ export default function Page() {
                   <button 
                     onClick={() => {
                       addLeg({
+                        id: "chiefs-bills-moneyline-chiefs",
                         match: "Chiefs vs Bills",
                         market: "Moneyline",
                         selection: "Chiefs",
@@ -3719,6 +3720,7 @@ export default function Page() {
                   <button 
                     onClick={() => {
                       addLeg({
+                        id: "chiefs-bills-moneyline-bills",
                         match: "Chiefs vs Bills",
                         market: "Moneyline",
                         selection: "Bills",
@@ -3743,6 +3745,7 @@ export default function Page() {
                   <button 
                     onClick={() => {
                       addLeg({
+                        id: "chiefs-bills-spread-chiefs",
                         match: "Chiefs vs Bills",
                         market: "Spread",
                         selection: "Chiefs -3.5",
@@ -3760,6 +3763,7 @@ export default function Page() {
                   <button 
                     onClick={() => {
                       addLeg({
+                        id: "chiefs-bills-spread-bills",
                         match: "Chiefs vs Bills",
                         market: "Spread",
                         selection: "Bills +3.5",
@@ -3770,12 +3774,12 @@ export default function Page() {
                       setIsBetSlipOpen(true);
                     }}
                     className="bg-white border border-gray-200 rounded p-2 text-left hover:border-gray-400 transition-colors"
-                    >
-                      <div className="text-xs font-medium text-gray-900">Bills +3.5</div>
-                      <div className="text-black font-bold text-xs">-110</div>
-                    </button>
-                  </div>
+                  >
+                    <div className="text-xs font-medium text-gray-900">Bills +3.5</div>
+                    <div className="text-black font-bold text-xs">-110</div>
+                  </button>
                 </div>
+              </div>
 
               {/* Total Points */}
               <div>
@@ -3784,6 +3788,7 @@ export default function Page() {
                   <button 
                     onClick={() => {
                       addLeg({
+                        id: "chiefs-bills-total-over",
                         match: "Chiefs vs Bills",
                         market: "Total Points",
                         selection: "Over 47.5",
@@ -3801,6 +3806,7 @@ export default function Page() {
                   <button 
                     onClick={() => {
                       addLeg({
+                        id: "chiefs-bills-total-under",
                         match: "Chiefs vs Bills",
                         market: "Total Points",
                         selection: "Under 47.5",
@@ -3825,6 +3831,7 @@ export default function Page() {
                   <button 
                     onClick={() => {
                       addLeg({
+                        id: "chiefs-bills-player-mahomes",
                         match: "Chiefs vs Bills",
                         market: "Player Props",
                         selection: "Patrick Mahomes Over 275.5 Passing Yards",
@@ -3844,6 +3851,7 @@ export default function Page() {
                   <button 
                     onClick={() => {
                       addLeg({
+                        id: "chiefs-bills-player-allen",
                         match: "Chiefs vs Bills",
                         market: "Player Props",
                         selection: "Josh Allen Over 1.5 Passing TDs",
@@ -3863,6 +3871,7 @@ export default function Page() {
                   <button 
                     onClick={() => {
                       addLeg({
+                        id: "chiefs-bills-player-kelce",
                         match: "Chiefs vs Bills",
                         market: "Player Props",
                         selection: "Travis Kelce Anytime TD",
@@ -3889,6 +3898,7 @@ export default function Page() {
                   <button 
                     onClick={() => {
                       addLeg({
+                        id: "chiefs-bills-game-both-20",
                         match: "Chiefs vs Bills",
                         market: "Game Props",
                         selection: "Both Teams to Score 20+",
@@ -3908,6 +3918,7 @@ export default function Page() {
                   <button 
                     onClick={() => {
                       addLeg({
+                        id: "chiefs-bills-game-overtime",
                         match: "Chiefs vs Bills",
                         market: "Game Props",
                         selection: "Game Goes to Overtime",
@@ -3927,6 +3938,7 @@ export default function Page() {
                   <button 
                     onClick={() => {
                       addLeg({
+                        id: "chiefs-bills-game-margin",
                         match: "Chiefs vs Bills",
                         market: "Game Props",
                         selection: "Winning Margin 1-6 Points",
@@ -3953,6 +3965,7 @@ export default function Page() {
                   <button 
                     onClick={() => {
                       addLeg({
+                        id: "chiefs-bills-ht-ft-chiefs-chiefs",
                         match: "Chiefs vs Bills",
                         market: "Halftime/Fulltime",
                         selection: "Chiefs/Chiefs",
@@ -3970,6 +3983,7 @@ export default function Page() {
                   <button 
                     onClick={() => {
                       addLeg({
+                        id: "chiefs-bills-ht-ft-bills-bills",
                         match: "Chiefs vs Bills",
                         market: "Halftime/Fulltime",
                         selection: "Bills/Bills",
@@ -3987,6 +4001,7 @@ export default function Page() {
                   <button 
                     onClick={() => {
                       addLeg({
+                        id: "chiefs-bills-ht-ft-chiefs-bills",
                         match: "Chiefs vs Bills",
                         market: "Halftime/Fulltime",
                         selection: "Chiefs/Bills",
@@ -4004,6 +4019,7 @@ export default function Page() {
                   <button 
                     onClick={() => {
                       addLeg({
+                        id: "chiefs-bills-ht-ft-bills-chiefs",
                         match: "Chiefs vs Bills",
                         market: "Halftime/Fulltime",
                         selection: "Bills/Chiefs",
