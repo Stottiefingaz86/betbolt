@@ -2455,21 +2455,6 @@ export default function Page() {
               <Image src="/flaame.png" alt="BetBolt Logo" width={60} height={60} />
             </div>
 
-            <div className="absolute top-4 right-4 z-30">
-              <button
-                onClick={() => setIsBalanceDrawerOpen(true)}
-                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-2 flex items-center space-x-3 hover:bg-white/20 transition-all duration-200"
-              >
-                <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">BB</span>
-                </div>
-                <div className="w-px h-4 bg-white/30"></div>
-                <div className="flex items-baseline space-x-1">
-                  <span className="text-white/60 text-xs">$</span>
-                  <span className="text-white text-sm font-bold">1,250.00</span>
-                </div>
-              </button>
-            </div>
 
             <div className="absolute right-4 bottom-24 z-30 flex flex-col items-center space-y-6">
               <div className="flex flex-col items-center space-y-2">
@@ -2619,21 +2604,6 @@ export default function Page() {
               <Image src="/flaame.png" alt="BetBolt Logo" width={60} height={60} />
             </div>
 
-            <div className="absolute top-4 right-4 z-30">
-              <button
-                onClick={() => setIsBalanceDrawerOpen(true)}
-                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-2 flex items-center space-x-3 hover:bg-white/20 transition-all duration-200"
-              >
-                <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">BB</span>
-                </div>
-                <div className="w-px h-4 bg-white/30"></div>
-                <div className="flex items-baseline space-x-1">
-                  <span className="text-white/60 text-xs">$</span>
-                  <span className="text-white text-sm font-bold">1,250.00</span>
-                </div>
-              </button>
-            </div>
 
             <div className="absolute right-4 bottom-24 z-30 flex flex-col items-center space-y-6">
               <div className="flex flex-col items-center space-y-2">
@@ -2794,21 +2764,6 @@ export default function Page() {
               <Image src="/flaame.png" alt="BetBolt Logo" width={60} height={60} />
             </div>
 
-            <div className="absolute top-4 right-4 z-30">
-              <button
-                onClick={() => setIsBalanceDrawerOpen(true)}
-                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-2 flex items-center space-x-3 hover:bg-white/20 transition-all duration-200"
-              >
-                <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">BB</span>
-                </div>
-                <div className="w-px h-4 bg-white/30"></div>
-                <div className="flex items-baseline space-x-1">
-                  <span className="text-white/60 text-xs">$</span>
-                  <span className="text-white text-sm font-bold">1,250.00</span>
-                </div>
-              </button>
-            </div>
 
             <div className="absolute top-24 left-1/2 transform -translate-x-1/2 z-20">
               <div className="bg-black/50 backdrop-blur-sm text-white px-4 py-2 rounded-lg">
