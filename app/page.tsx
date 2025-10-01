@@ -114,28 +114,6 @@ export default function Page() {
               />
             </div>
 
-            {/* Logo - Top Left */}
-            <div className="absolute top-4 left-4 z-30">
-              <Image src="/flaame.png" alt="Flaame Logo" width={60} height={60} />
-            </div>
-
-            {/* Balance - Top Right */}
-            <div className="absolute top-4 right-4 z-30">
-              <button
-                onClick={() => setIsBalanceDrawerOpen(true)}
-                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-2 flex items-center space-x-3 hover:bg-white/20 transition-all duration-200"
-              >
-                <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">BB</span>
-                </div>
-                <div className="w-px h-4 bg-white/30"></div>
-                <div className="flex items-baseline space-x-1">
-                  <span className="text-white/60 text-xs">$</span>
-                  <span className="text-white text-sm font-bold">1,250.00</span>
-                </div>
-              </button>
-            </div>
-
             {/* Side Menu - Right Side */}
             <div className="absolute right-4 bottom-24 z-30 flex flex-col items-center space-y-6">
               <div className="flex flex-col items-center space-y-2">
@@ -334,39 +312,6 @@ export default function Page() {
             {/* Dark overlay for better text readability */}
             <div className="absolute inset-0 bg-black/30 z-10"></div>
 
-            {/* Logo - Top Left */}
-            <div className="absolute top-4 left-4 z-30">
-              <Image
-                src="/flaame.png"
-                alt="BetBolt Logo"
-                width={60}
-                height={60}
-              />
-            </div>
-
-            {/* User Avatar & Balance - Top Right */}
-            <div className="absolute top-4 right-4 z-30">
-              {/* Combined Balance Component */}
-              <button
-                onClick={() => setIsBalanceDrawerOpen(true)}
-                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-2 flex items-center space-x-3 hover:bg-white/20 transition-all duration-200"
-              >
-                {/* User Avatar */}
-                <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">BB</span>
-                </div>
-                
-                {/* Divider */}
-                <div className="w-px h-4 bg-white/30"></div>
-                
-                {/* Balance */}
-                <div className="flex items-baseline space-x-1">
-                  <span className="text-white/60 text-xs">$</span>
-                  <span className="text-white text-sm font-bold">1,250.00</span>
-                </div>
-              </button>
-            </div>
-
             {/* Side Menu - Instagram Reels Style */}
             <div className="absolute right-4 bottom-24 z-30 flex flex-col items-center space-y-6">
 
@@ -555,39 +500,6 @@ export default function Page() {
             
             {/* Dark overlay for better text readability */}
             <div className="absolute inset-0 bg-black/30 z-10"></div>
-
-            {/* Logo - Top Left */}
-            <div className="absolute top-4 left-4 z-30">
-              <Image
-                src="/flaame.png"
-                alt="BetBolt Logo"
-                width={60}
-                height={60}
-              />
-            </div>
-
-            {/* User Avatar & Balance - Top Right */}
-            <div className="absolute top-4 right-4 z-30">
-              {/* Combined Balance Component */}
-              <button
-                onClick={() => setIsBalanceDrawerOpen(true)}
-                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-2 flex items-center space-x-3 hover:bg-white/20 transition-all duration-200"
-              >
-                {/* User Avatar */}
-                <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">BB</span>
-                </div>
-                
-                {/* Divider */}
-                <div className="w-px h-4 bg-white/30"></div>
-                
-                {/* Balance */}
-                <div className="flex items-baseline space-x-1">
-                  <span className="text-white/60 text-xs">$</span>
-                  <span className="text-white text-sm font-bold">1,250.00</span>
-                </div>
-              </button>
-            </div>
 
             {/* Side Menu - Instagram Reels Style */}
             <div className="absolute right-4 bottom-24 z-30 flex flex-col items-center space-y-6">
@@ -792,39 +704,6 @@ export default function Page() {
             {/* Dark overlay for better text readability */}
             <div className="absolute inset-0 bg-black/30 z-10"></div>
 
-            {/* Logo - Top Left */}
-            <div className="absolute top-4 left-4 z-30">
-              <Image
-                src="/flaame.png"
-                alt="BetBolt Logo"
-                width={60}
-                height={60}
-              />
-            </div>
-
-            {/* User Avatar & Balance - Top Right */}
-            <div className="absolute top-4 right-4 z-30">
-              {/* Combined Balance Component */}
-              <button
-                onClick={() => setIsBalanceDrawerOpen(true)}
-                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-2 flex items-center space-x-3 hover:bg-white/20 transition-all duration-200"
-              >
-                {/* User Avatar */}
-                <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">BB</span>
-                </div>
-                
-                {/* Divider */}
-                <div className="w-px h-4 bg-white/30"></div>
-                
-                {/* Balance */}
-                <div className="flex items-baseline space-x-1">
-                  <span className="text-white/60 text-xs">$</span>
-                  <span className="text-white text-sm font-bold">1,250.00</span>
-                </div>
-              </button>
-            </div>
-
             {/* Side Menu - Instagram Reels Style */}
             <div className="absolute right-4 bottom-24 z-30 flex flex-col items-center space-y-6">
 
@@ -995,23 +874,6 @@ export default function Page() {
               <LiquidEther colors={['#059669', '#dc2626', '#7c3aed']} />
             </div>
             <div className="absolute inset-0 bg-black/30 z-10"></div>
-            <div className="absolute top-4 left-4 z-30">
-              <Image src="/flaame.png" alt="BetBolt Logo" width={60} height={60} />
-            </div>
-            <div className="absolute top-4 right-4 z-30">
-              <button
-                onClick={() => setIsBalanceDrawerOpen(true)}
-                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-2 flex items-center space-x-3 hover:bg-white/20 transition-all duration-200"
-              >
-                <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">BB</span>
-                </div>
-                <div className="w-px h-4 bg-white/30"></div>
-                <div className="flex items-center space-x-1">
-                  <span className="text-white text-sm font-bold">$1,250</span>
-                </div>
-              </button>
-            </div>
             <div className="absolute right-4 bottom-24 z-30 flex flex-col items-center space-y-6">
               <div className="flex flex-col items-center space-y-2">
                 <button 
@@ -1143,23 +1005,6 @@ export default function Page() {
               <LiquidEther colors={['#f59e0b', '#dc2626', '#1e40af']} />
             </div>
             <div className="absolute inset-0 bg-black/30 z-10"></div>
-            <div className="absolute top-4 left-4 z-30">
-              <Image src="/flaame.png" alt="BetBolt Logo" width={60} height={60} />
-            </div>
-            <div className="absolute top-4 right-4 z-30">
-              <button
-                onClick={() => setIsBalanceDrawerOpen(true)}
-                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-2 flex items-center space-x-3 hover:bg-white/20 transition-all duration-200"
-              >
-                <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">BB</span>
-                </div>
-                <div className="w-px h-4 bg-white/30"></div>
-                <div className="flex items-center space-x-1">
-                  <span className="text-white text-sm font-bold">$1,250</span>
-                </div>
-              </button>
-            </div>
             <div className="absolute right-4 bottom-24 z-30 flex flex-col items-center space-y-6">
               <div className="flex flex-col items-center space-y-2">
                 <button 
@@ -1299,34 +1144,6 @@ export default function Page() {
             </div>
             <div className="absolute inset-0 bg-black/60 z-10"></div>
             
-            {/* Logo - Top Left */}
-            <div className="absolute top-4 left-4 z-30">
-              <Image src="/flaame.png" alt="BetBolt Logo" width={60} height={60} />
-            </div>
-
-            {/* User Avatar & Balance - Top Right */}
-            <div className="absolute top-4 right-4 z-30">
-              {/* Combined Balance Component */}
-              <button
-                onClick={() => setIsBalanceDrawerOpen(true)}
-                className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-2 flex items-center space-x-3 hover:bg-white/20 transition-all duration-200"
-              >
-                {/* User Avatar */}
-                <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">BB</span>
-                </div>
-                
-                {/* Divider */}
-                <div className="w-px h-4 bg-white/30"></div>
-                
-                {/* Balance */}
-                <div className="flex items-baseline space-x-1">
-                  <span className="text-white/60 text-xs">$</span>
-                  <span className="text-white text-sm font-bold">1,250.00</span>
-                </div>
-              </button>
-            </div>
-
             {/* Game Tile - Left Aligned */}
             <div className="absolute top-1/2 left-6 transform -translate-y-1/2 z-20" style={{marginTop: '-40px'}}>
               <div className="relative">
@@ -3297,6 +3114,28 @@ export default function Page() {
         zIndex: 1
       }}
     >
+      {/* Global Logo - Fixed on all reels */}
+      <div className="fixed top-4 left-4 z-50">
+        <Image src="/flaame.png" alt="Flaame Logo" width={60} height={60} />
+      </div>
+
+      {/* Global Balance - Fixed on all reels */}
+      <div className="fixed top-4 right-4 z-50">
+        <button
+          onClick={() => setIsBalanceDrawerOpen(true)}
+          className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-2 flex items-center space-x-3 hover:bg-white/20 transition-all duration-200"
+        >
+          <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
+            <span className="text-white text-xs font-bold">BB</span>
+          </div>
+          <div className="w-px h-4 bg-white/30"></div>
+          <div className="flex items-baseline space-x-1">
+            <span className="text-white/60 text-xs">$</span>
+            <span className="text-white text-sm font-bold">1,250.00</span>
+          </div>
+        </button>
+      </div>
+
       <ReelsSwiper 
         items={reels} 
         onSlideChange={(index) => setCurrentReelIndex(index)}
