@@ -3171,7 +3171,7 @@ export default function Page() {
             
             // Animate progress bar from 75% to 87.5% (500 XP gain)
             setTimeout(() => {
-              const progressBar = document.querySelector('.progress-bar-fill');
+              const progressBar = document.querySelector('.progress-bar-fill') as HTMLElement;
               if (progressBar) {
                 progressBar.style.width = '75%';
                 setTimeout(() => {
