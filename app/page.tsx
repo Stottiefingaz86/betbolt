@@ -41,140 +41,157 @@ const ConfettiClass = function() {
     fade: boolean = false;
   }
   
-  var ConfettiMain = function(id: string) {
-    this.bursts = [];
-    this.element = null;
-    this.time = (new Date()).getTime();
-    this.delta_time = 0;
-    
-    if (!id) throw new Error("Missing id");
-    if (!ConfettiMain.CONFIG) {
-      ConfettiMain.CONFIG = new Config();
+  class ConfettiMain {
+    bursts: any[] = [];
+    element: HTMLElement | null = null;
+    time: number = (new Date()).getTime();
+    delta_time: number = 0;
+    static CONFIG: Config;
+    static CTX: CanvasRenderingContext2D | null = null;
+
+    constructor(id: string) {
+      if (!id) throw new Error("Missing id");
+      if (!ConfettiMain.CONFIG) {
+        ConfettiMain.CONFIG = new Config();
+      }
+      
+      this.setupCanvasContext();
+      this.setupElement(id);
+      window.requestAnimationFrame(this.update.bind(this));
     }
     
-    this.setupCanvasContext();
-    this.setupElement(id);
-    window.requestAnimationFrame(this.update.bind(this));
-  };
-  
-  ConfettiMain.prototype.setupCanvasContext = function() {
-    if (!ConfettiMain.CTX) {
-      var canvas = document.createElement("canvas");
-      ConfettiMain.CTX = canvas.getContext("2d");
-      canvas.width = 2 * window.innerWidth;
-      canvas.height = 2 * window.innerHeight;
-      canvas.style.position = "fixed";
-      canvas.style.top = "0";
-      canvas.style.left = "0";
-      canvas.style.width = "calc(100%)";
-      canvas.style.height = "calc(100%)";
-      canvas.style.margin = "0";
-      canvas.style.padding = "0";
-      canvas.style.zIndex = "999999999";
-      canvas.style.pointerEvents = "none";
-      document.body.appendChild(canvas);
-      window.addEventListener("resize", function() {
+    setupCanvasContext(): void {
+      if (!ConfettiMain.CTX) {
+        var canvas = document.createElement("canvas");
+        ConfettiMain.CTX = canvas.getContext("2d");
         canvas.width = 2 * window.innerWidth;
         canvas.height = 2 * window.innerHeight;
-      });
+        canvas.style.position = "fixed";
+        canvas.style.top = "0";
+        canvas.style.left = "0";
+        canvas.style.width = "calc(100%)";
+        canvas.style.height = "calc(100%)";
+        canvas.style.margin = "0";
+        canvas.style.padding = "0";
+        canvas.style.zIndex = "999999999";
+        canvas.style.pointerEvents = "none";
+        document.body.appendChild(canvas);
+        window.addEventListener("resize", function() {
+          canvas.width = 2 * window.innerWidth;
+          canvas.height = 2 * window.innerHeight;
+        });
+      }
     }
-  };
-  
-  ConfettiMain.prototype.setupElement = function(id: string) {
-    var self = this;
-    this.element = document.getElementById(id);
-    if (this.element) {
-      this.element.addEventListener("click", function(event: MouseEvent) {
-        var position = new Vector(2 * event.clientX, 2 * event.clientY);
-        self.bursts.push(new Burst(position));
-        if (ConfettiMain.CONFIG.destroy_target) {
-          self.element.style.visibility = "hidden";
+    
+    setupElement(id: string): void {
+      this.element = document.getElementById(id);
+      if (this.element) {
+        this.element.addEventListener("click", (event: MouseEvent) => {
+          var position = new Vector(2 * event.clientX, 2 * event.clientY);
+          this.bursts.push(new Burst(position));
+          if (ConfettiMain.CONFIG.destroy_target) {
+            this.element!.style.visibility = "hidden";
+          }
+        });
+      }
+    }
+    
+    update(timestamp: number): void {
+      this.delta_time = (timestamp - this.time) / 1000;
+      this.time = timestamp;
+      
+      for (var i = this.bursts.length - 1; i >= 0; i--) {
+        this.bursts[i].update(this.delta_time);
+        if (this.bursts[i].particles.length === 0) {
+          this.bursts.splice(i, 1);
         }
-      });
+      }
+      
+      this.draw();
+      window.requestAnimationFrame(this.update.bind(this));
     }
-  };
-  
-  ConfettiMain.prototype.update = function(timestamp: number) {
-    this.delta_time = (timestamp - this.time) / 1000;
-    this.time = timestamp;
     
-    for (var i = this.bursts.length - 1; i >= 0; i--) {
-      this.bursts[i].update(this.delta_time);
-      if (this.bursts[i].particles.length === 0) {
-        this.bursts.splice(i, 1);
+    draw(): void {
+      Utils.clearScreen();
+      for (var i = 0; i < this.bursts.length; i++) {
+        this.bursts[i].draw();
+      }
+    }
+  }
+  
+  class Burst {
+    particles: any[] = [];
+
+    constructor(position: Vector) {
+      for (var i = 0; i < ConfettiMain.CONFIG.particle_count; i++) {
+        this.particles.push(new Particle(position));
       }
     }
     
-    this.draw();
-    window.requestAnimationFrame(this.update.bind(this));
-  };
-  
-  ConfettiMain.prototype.draw = function() {
-    Utils.clearScreen();
-    for (var i = 0; i < this.bursts.length; i++) {
-      this.bursts[i].draw();
-    }
-  };
-  
-  var Burst = function(position: Vector) {
-    this.particles = [];
-    for (var i = 0; i < ConfettiMain.CONFIG.particle_count; i++) {
-      this.particles.push(new Particle(position));
-    }
-  };
-  
-  Burst.prototype.update = function(deltaTime: number) {
-    for (var i = this.particles.length - 1; i >= 0; i--) {
-      this.particles[i].update(deltaTime);
-      if (this.particles[i].checkBounds()) {
-        this.particles.splice(i, 1);
+    update(deltaTime: number): void {
+      for (var i = this.particles.length - 1; i >= 0; i--) {
+        this.particles[i].update(deltaTime);
+        if (this.particles[i].checkBounds()) {
+          this.particles.splice(i, 1);
+        }
       }
     }
-  };
-  
-  Burst.prototype.draw = function() {
-    for (var i = this.particles.length - 1; i >= 0; i--) {
-      this.particles[i].draw();
+    
+    draw(): void {
+      for (var i = this.particles.length - 1; i >= 0; i--) {
+        this.particles[i].draw();
+      }
     }
-  };
+  }
   
-  var Particle = function(position: Vector) {
-    this.size = new Vector(
-      (16 * Math.random() + 4) * ConfettiMain.CONFIG.particle_size,
-      (4 * Math.random() + 4) * ConfettiMain.CONFIG.particle_size
-    );
-    this.position = new Vector(
-      position.x - this.size.x / 2,
-      position.y - this.size.y / 2
-    );
-    this.velocity = VelocityGenerator.generateVelocity();
-    this.rotation = 360 * Math.random();
-    this.rotation_speed = 10 * (Math.random() - 0.5);
-    this.hue = 360 * Math.random();
-    this.opacity = 100;
-    this.lifetime = Math.random() + 0.25;
-  };
-  
-  Particle.prototype.update = function(deltaTime: number) {
-    this.velocity.y += ConfettiMain.CONFIG.gravity * (this.size.y / (10 * ConfettiMain.CONFIG.particle_size)) * deltaTime;
-    this.velocity.x += 25 * (Math.random() - 0.5) * deltaTime;
-    this.velocity.y *= 0.98;
-    this.velocity.x *= 0.98;
-    this.position.x += this.velocity.x;
-    this.position.y += this.velocity.y;
-    this.rotation += this.rotation_speed;
-    if (ConfettiMain.CONFIG.fade) {
-      this.opacity -= this.lifetime;
+  class Particle {
+    size: Vector;
+    position: Vector;
+    velocity: Vector;
+    rotation: number;
+    rotation_speed: number;
+    hue: number;
+    opacity: number;
+    lifetime: number;
+
+    constructor(position: Vector) {
+      this.size = new Vector(
+        (16 * Math.random() + 4) * ConfettiMain.CONFIG.particle_size,
+        (4 * Math.random() + 4) * ConfettiMain.CONFIG.particle_size
+      );
+      this.position = new Vector(
+        position.x - this.size.x / 2,
+        position.y - this.size.y / 2
+      );
+      this.velocity = VelocityGenerator.generateVelocity();
+      this.rotation = 360 * Math.random();
+      this.rotation_speed = 10 * (Math.random() - 0.5);
+      this.hue = 360 * Math.random();
+      this.opacity = 100;
+      this.lifetime = Math.random() + 0.25;
     }
-  };
-  
-  Particle.prototype.checkBounds = function() {
-    return this.position.y - 2 * this.size.x > 2 * window.innerHeight;
-  };
-  
-  Particle.prototype.draw = function() {
-    Utils.drawRectangle(this.position, this.size, this.rotation, this.hue, this.opacity);
-  };
+    
+    update(deltaTime: number): void {
+      this.velocity.y += ConfettiMain.CONFIG.gravity * (this.size.y / (10 * ConfettiMain.CONFIG.particle_size)) * deltaTime;
+      this.velocity.x += 25 * (Math.random() - 0.5) * deltaTime;
+      this.velocity.y *= 0.98;
+      this.velocity.x *= 0.98;
+      this.position.x += this.velocity.x;
+      this.position.y += this.velocity.y;
+      this.rotation += this.rotation_speed;
+      if (ConfettiMain.CONFIG.fade) {
+        this.opacity -= this.lifetime;
+      }
+    }
+    
+    checkBounds(): boolean {
+      return this.position.y - 2 * this.size.x > 2 * window.innerHeight;
+    }
+    
+    draw(): void {
+      Utils.drawRectangle(this.position, this.size, this.rotation, this.hue, this.opacity);
+    }
+  }
   
   class Vector implements VectorInterface {
     x: number;
