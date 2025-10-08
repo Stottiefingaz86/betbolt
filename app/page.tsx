@@ -10,238 +10,109 @@ import Image from "next/image";
 import Link from "next/link";
 import BetterWheel, { BetterWheelRef } from "@/components/BetterWheel";
 
-// Confetti class - TypeScript compatible
-declare global {
-  interface Window {
-    Confetti: any;
+// Simple confetti animation - TypeScript compatible
+class SimpleConfetti {
+  private canvas: HTMLCanvasElement;
+  private ctx: CanvasRenderingContext2D;
+  private particles: ConfettiParticle[] = [];
+  private animationId: number | null = null;
+
+  constructor(targetId: string) {
+    this.canvas = document.createElement('canvas');
+    this.ctx = this.canvas.getContext('2d')!;
+    this.canvas.style.position = 'fixed';
+    this.canvas.style.top = '0';
+    this.canvas.style.left = '0';
+    this.canvas.style.width = '100%';
+    this.canvas.style.height = '100%';
+    this.canvas.style.pointerEvents = 'none';
+    this.canvas.style.zIndex = '999999';
+    
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+    document.body.appendChild(this.canvas);
+
+    // Create particles
+    for (let i = 0; i < 75; i++) {
+      this.particles.push(new ConfettiParticle());
+    }
+
+    // Start animation
+    this.animate();
+    
+    // Clean up after 5 seconds
+    setTimeout(() => {
+      this.destroy();
+    }, 5000);
+  }
+
+  private animate = (): void => {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    
+    this.particles.forEach(particle => {
+      particle.update();
+      particle.draw(this.ctx);
+    });
+    
+    this.animationId = requestAnimationFrame(this.animate);
+  };
+
+  private destroy(): void {
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId);
+    }
+    if (this.canvas.parentNode) {
+      this.canvas.parentNode.removeChild(this.canvas);
+    }
   }
 }
 
-interface ConfigInterface {
-  gravity: number;
-  particle_count: number;
-  particle_size: number;
-  explosion_power: number;
-  destroy_target: boolean;
-  fade: boolean;
-}
-
-interface VectorInterface {
+class ConfettiParticle {
   x: number;
   y: number;
+  vx: number;
+  vy: number;
+  color: string;
+  size: number;
+  rotation: number;
+  rotationSpeed: number;
+
+  constructor() {
+    this.x = window.innerWidth / 2;
+    this.y = window.innerHeight / 2;
+    this.vx = (Math.random() - 0.5) * 10;
+    this.vy = (Math.random() - 0.5) * 10;
+    this.color = `hsl(${Math.random() * 360}, 70%, 60%)`;
+    this.size = Math.random() * 4 + 2;
+    this.rotation = Math.random() * 360;
+    this.rotationSpeed = (Math.random() - 0.5) * 10;
+  }
+
+  update(): void {
+    this.x += this.vx;
+    this.y += this.vy;
+    this.vy += 0.3; // gravity
+    this.rotation += this.rotationSpeed;
+  }
+
+  draw(ctx: CanvasRenderingContext2D): void {
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate(this.rotation * Math.PI / 180);
+    ctx.fillStyle = this.color;
+    ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+    ctx.restore();
+  }
 }
 
-const ConfettiClass = function() {
-  class Config implements ConfigInterface {
-    gravity: number = 10;
-    particle_count: number = 75;
-    particle_size: number = 1;
-    explosion_power: number = 25;
-    destroy_target: boolean = true;
-    fade: boolean = false;
+// Global confetti function
+declare global {
+  interface Window {
+    Confetti: typeof SimpleConfetti;
   }
-  
-  class ConfettiMain {
-    bursts: any[] = [];
-    element: HTMLElement | null = null;
-    time: number = (new Date()).getTime();
-    delta_time: number = 0;
-    static CONFIG: Config;
-    static CTX: CanvasRenderingContext2D | null = null;
+}
 
-    constructor(id: string) {
-      if (!id) throw new Error("Missing id");
-      if (!ConfettiMain.CONFIG) {
-        ConfettiMain.CONFIG = new Config();
-      }
-      
-      this.setupCanvasContext();
-      this.setupElement(id);
-      window.requestAnimationFrame(this.update.bind(this));
-    }
-    
-    setupCanvasContext(): void {
-      if (!ConfettiMain.CTX) {
-        var canvas = document.createElement("canvas");
-        ConfettiMain.CTX = canvas.getContext("2d");
-        canvas.width = 2 * window.innerWidth;
-        canvas.height = 2 * window.innerHeight;
-        canvas.style.position = "fixed";
-        canvas.style.top = "0";
-        canvas.style.left = "0";
-        canvas.style.width = "calc(100%)";
-        canvas.style.height = "calc(100%)";
-        canvas.style.margin = "0";
-        canvas.style.padding = "0";
-        canvas.style.zIndex = "999999999";
-        canvas.style.pointerEvents = "none";
-        document.body.appendChild(canvas);
-        window.addEventListener("resize", function() {
-          canvas.width = 2 * window.innerWidth;
-          canvas.height = 2 * window.innerHeight;
-        });
-      }
-    }
-    
-    setupElement(id: string): void {
-      this.element = document.getElementById(id);
-      if (this.element) {
-        this.element.addEventListener("click", (event: MouseEvent) => {
-          var position = new Vector(2 * event.clientX, 2 * event.clientY);
-          this.bursts.push(new Burst(position));
-          if (ConfettiMain.CONFIG.destroy_target) {
-            this.element!.style.visibility = "hidden";
-          }
-        });
-      }
-    }
-    
-    update(timestamp: number): void {
-      this.delta_time = (timestamp - this.time) / 1000;
-      this.time = timestamp;
-      
-      for (var i = this.bursts.length - 1; i >= 0; i--) {
-        this.bursts[i].update(this.delta_time);
-        if (this.bursts[i].particles.length === 0) {
-          this.bursts.splice(i, 1);
-        }
-      }
-      
-      this.draw();
-      window.requestAnimationFrame(this.update.bind(this));
-    }
-    
-    draw(): void {
-      Utils.clearScreen();
-      for (var i = 0; i < this.bursts.length; i++) {
-        this.bursts[i].draw();
-      }
-    }
-  }
-  
-  class Burst {
-    particles: any[] = [];
-
-    constructor(position: Vector) {
-      for (var i = 0; i < ConfettiMain.CONFIG.particle_count; i++) {
-        this.particles.push(new Particle(position));
-      }
-    }
-    
-    update(deltaTime: number): void {
-      for (var i = this.particles.length - 1; i >= 0; i--) {
-        this.particles[i].update(deltaTime);
-        if (this.particles[i].checkBounds()) {
-          this.particles.splice(i, 1);
-        }
-      }
-    }
-    
-    draw(): void {
-      for (var i = this.particles.length - 1; i >= 0; i--) {
-        this.particles[i].draw();
-      }
-    }
-  }
-  
-  class Particle {
-    size: Vector;
-    position: Vector;
-    velocity: Vector;
-    rotation: number;
-    rotation_speed: number;
-    hue: number;
-    opacity: number;
-    lifetime: number;
-
-    constructor(position: Vector) {
-      this.size = new Vector(
-        (16 * Math.random() + 4) * ConfettiMain.CONFIG.particle_size,
-        (4 * Math.random() + 4) * ConfettiMain.CONFIG.particle_size
-      );
-      this.position = new Vector(
-        position.x - this.size.x / 2,
-        position.y - this.size.y / 2
-      );
-      this.velocity = VelocityGenerator.generateVelocity();
-      this.rotation = 360 * Math.random();
-      this.rotation_speed = 10 * (Math.random() - 0.5);
-      this.hue = 360 * Math.random();
-      this.opacity = 100;
-      this.lifetime = Math.random() + 0.25;
-    }
-    
-    update(deltaTime: number): void {
-      this.velocity.y += ConfettiMain.CONFIG.gravity * (this.size.y / (10 * ConfettiMain.CONFIG.particle_size)) * deltaTime;
-      this.velocity.x += 25 * (Math.random() - 0.5) * deltaTime;
-      this.velocity.y *= 0.98;
-      this.velocity.x *= 0.98;
-      this.position.x += this.velocity.x;
-      this.position.y += this.velocity.y;
-      this.rotation += this.rotation_speed;
-      if (ConfettiMain.CONFIG.fade) {
-        this.opacity -= this.lifetime;
-      }
-    }
-    
-    checkBounds(): boolean {
-      return this.position.y - 2 * this.size.x > 2 * window.innerHeight;
-    }
-    
-    draw(): void {
-      Utils.drawRectangle(this.position, this.size, this.rotation, this.hue, this.opacity);
-    }
-  }
-  
-  class Vector implements VectorInterface {
-    x: number;
-    y: number;
-    
-    constructor(x: number = 0, y: number = 0) {
-      this.x = x;
-      this.y = y;
-    }
-  }
-  
-  class VelocityGenerator {
-    static generateVelocity(): Vector {
-      var x = Math.random() - 0.5;
-      var y = Math.random() - 0.7;
-      var length = Math.sqrt(x * x + y * y);
-      y /= length;
-      return new Vector(
-        (x / length) * (Math.random() * ConfettiMain.CONFIG.explosion_power),
-        y * (Math.random() * ConfettiMain.CONFIG.explosion_power)
-      );
-    }
-  }
-  
-  class Utils {
-    static clearScreen(): void {
-      if (ConfettiMain.CTX) {
-        ConfettiMain.CTX.clearRect(0, 0, 2 * window.innerWidth, 2 * window.innerHeight);
-      }
-    }
-    
-    static drawRectangle(position: Vector, size: Vector, rotation: number, hue: number, opacity: number): void {
-      if (ConfettiMain.CTX) {
-        ConfettiMain.CTX.save();
-        ConfettiMain.CTX.beginPath();
-        ConfettiMain.CTX.translate(position.x + size.x / 2, position.y + size.y / 2);
-        ConfettiMain.CTX.rotate(rotation * Math.PI / 180);
-        ConfettiMain.CTX.rect(-size.x / 2, -size.y / 2, size.x, size.y);
-        ConfettiMain.CTX.fillStyle = "hsla(" + hue + "deg, 90%, 65%, " + opacity + "%)";
-        ConfettiMain.CTX.fill();
-        ConfettiMain.CTX.restore();
-      }
-    }
-  }
-  
-  return ConfettiMain;
-}();
-
-// Make Confetti available globally
-(window as any).Confetti = ConfettiClass;
+(window as any).Confetti = SimpleConfetti;
 
 export default function Page() {
   useViewportHeight();
@@ -3398,13 +3269,8 @@ export default function Page() {
             confettiTarget.style.zIndex = '9998';
             document.body.appendChild(confettiTarget);
             
-            // Initialize confetti with the target
-            const confetti = new ConfettiClass('confetti-target');
-            confetti.setCount(75);
-            confetti.setSize(1);
-            confetti.setPower(25);
-            confetti.setFade(false);
-            confetti.destroyTarget(true);
+            // Initialize confetti
+            new SimpleConfetti('confetti-target');
             
             // Animate progress bar from 75% to 87.5% (500 XP gain)
             setTimeout(() => {
