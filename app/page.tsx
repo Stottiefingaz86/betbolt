@@ -17,17 +17,29 @@ declare global {
   }
 }
 
+interface ConfigInterface {
+  gravity: number;
+  particle_count: number;
+  particle_size: number;
+  explosion_power: number;
+  destroy_target: boolean;
+  fade: boolean;
+}
+
+interface VectorInterface {
+  x: number;
+  y: number;
+}
+
 const ConfettiClass = function() {
-  var Config = function() {
-    return function() {
-      this.gravity = 10;
-      this.particle_count = 75;
-      this.particle_size = 1;
-      this.explosion_power = 25;
-      this.destroy_target = true;
-      this.fade = false;
-    };
-  }();
+  class Config implements ConfigInterface {
+    gravity: number = 10;
+    particle_count: number = 75;
+    particle_size: number = 1;
+    explosion_power: number = 25;
+    destroy_target: boolean = true;
+    fade: boolean = false;
+  }
   
   var ConfettiMain = function(id: string) {
     this.bursts = [];
@@ -164,41 +176,49 @@ const ConfettiClass = function() {
     Utils.drawRectangle(this.position, this.size, this.rotation, this.hue, this.opacity);
   };
   
-  var Vector = function(x: number, y: number) {
-    this.x = x || 0;
-    this.y = y || 0;
-  };
-  
-  var VelocityGenerator = function() {};
-  VelocityGenerator.generateVelocity = function() {
-    var x = Math.random() - 0.5;
-    var y = Math.random() - 0.7;
-    var length = Math.sqrt(x * x + y * y);
-    y /= length;
-    return new Vector(
-      (x / length) * (Math.random() * ConfettiMain.CONFIG.explosion_power),
-      y * (Math.random() * ConfettiMain.CONFIG.explosion_power)
-    );
-  };
-  
-  var Utils = function() {};
-  Utils.clearScreen = function() {
-    if (ConfettiMain.CTX) {
-      ConfettiMain.CTX.clearRect(0, 0, 2 * window.innerWidth, 2 * window.innerHeight);
+  class Vector implements VectorInterface {
+    x: number;
+    y: number;
+    
+    constructor(x: number = 0, y: number = 0) {
+      this.x = x;
+      this.y = y;
     }
-  };
-  Utils.drawRectangle = function(position: Vector, size: Vector, rotation: number, hue: number, opacity: number) {
-    if (ConfettiMain.CTX) {
-      ConfettiMain.CTX.save();
-      ConfettiMain.CTX.beginPath();
-      ConfettiMain.CTX.translate(position.x + size.x / 2, position.y + size.y / 2);
-      ConfettiMain.CTX.rotate(rotation * Math.PI / 180);
-      ConfettiMain.CTX.rect(-size.x / 2, -size.y / 2, size.x, size.y);
-      ConfettiMain.CTX.fillStyle = "hsla(" + hue + "deg, 90%, 65%, " + opacity + "%)";
-      ConfettiMain.CTX.fill();
-      ConfettiMain.CTX.restore();
+  }
+  
+  class VelocityGenerator {
+    static generateVelocity(): Vector {
+      var x = Math.random() - 0.5;
+      var y = Math.random() - 0.7;
+      var length = Math.sqrt(x * x + y * y);
+      y /= length;
+      return new Vector(
+        (x / length) * (Math.random() * ConfettiMain.CONFIG.explosion_power),
+        y * (Math.random() * ConfettiMain.CONFIG.explosion_power)
+      );
     }
-  };
+  }
+  
+  class Utils {
+    static clearScreen(): void {
+      if (ConfettiMain.CTX) {
+        ConfettiMain.CTX.clearRect(0, 0, 2 * window.innerWidth, 2 * window.innerHeight);
+      }
+    }
+    
+    static drawRectangle(position: Vector, size: Vector, rotation: number, hue: number, opacity: number): void {
+      if (ConfettiMain.CTX) {
+        ConfettiMain.CTX.save();
+        ConfettiMain.CTX.beginPath();
+        ConfettiMain.CTX.translate(position.x + size.x / 2, position.y + size.y / 2);
+        ConfettiMain.CTX.rotate(rotation * Math.PI / 180);
+        ConfettiMain.CTX.rect(-size.x / 2, -size.y / 2, size.x, size.y);
+        ConfettiMain.CTX.fillStyle = "hsla(" + hue + "deg, 90%, 65%, " + opacity + "%)";
+        ConfettiMain.CTX.fill();
+        ConfettiMain.CTX.restore();
+      }
+    }
+  }
   
   return ConfettiMain;
 }();
