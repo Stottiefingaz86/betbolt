@@ -4,15 +4,17 @@ export class SimpleConfetti {
   private ctx: CanvasRenderingContext2D;
   private particles: ConfettiParticle[] = [];
   private animationId: number | null = null;
+  private startTime: number;
 
   constructor(targetId: string) {
+    this.startTime = Date.now();
     this.canvas = document.createElement('canvas');
     this.ctx = this.canvas.getContext('2d')!;
     this.canvas.style.position = 'fixed';
     this.canvas.style.top = '0';
     this.canvas.style.left = '0';
-    this.canvas.style.width = '100%';
-    this.canvas.style.height = '100%';
+    this.canvas.style.width = '100vw';
+    this.canvas.style.height = '100vh';
     this.canvas.style.pointerEvents = 'none';
     this.canvas.style.zIndex = '999999';
     
@@ -35,21 +37,41 @@ export class SimpleConfetti {
   }
 
   private animate = (): void => {
+    const currentTime = Date.now();
+    const elapsed = currentTime - this.startTime;
+    
+    // Stop animation after 4.5 seconds to allow particles to fade
+    if (elapsed > 4500) {
+      this.destroy();
+      return;
+    }
+    
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     
-    this.particles.forEach(particle => {
+    // Filter out particles that are off-screen and update/draw remaining ones
+    this.particles = this.particles.filter(particle => {
       particle.update();
-      particle.draw(this.ctx);
+      if (particle.isAlive()) {
+        particle.draw(this.ctx);
+        return true;
+      }
+      return false;
     });
     
-    this.animationId = requestAnimationFrame(this.animate);
+    // Continue animation if we still have particles or haven't reached time limit
+    if (this.particles.length > 0 || elapsed < 4500) {
+      this.animationId = requestAnimationFrame(this.animate);
+    } else {
+      this.destroy();
+    }
   };
 
   private destroy(): void {
     if (this.animationId) {
       cancelAnimationFrame(this.animationId);
+      this.animationId = null;
     }
-    if (this.canvas.parentNode) {
+    if (this.canvas && this.canvas.parentNode) {
       this.canvas.parentNode.removeChild(this.canvas);
     }
   }
@@ -64,29 +86,48 @@ class ConfettiParticle {
   size: number;
   rotation: number;
   rotationSpeed: number;
+  life: number;
+  maxLife: number;
 
   constructor() {
     this.x = window.innerWidth / 2;
     this.y = window.innerHeight / 2;
-    this.vx = (Math.random() - 0.5) * 10;
-    this.vy = (Math.random() - 0.5) * 10;
-    this.color = `hsl(${Math.random() * 360}, 70%, 60%)`;
-    this.size = Math.random() * 4 + 2;
+    this.vx = (Math.random() - 0.5) * 8;
+    this.vy = (Math.random() - 0.5) * 8 - 2; // Slight upward bias
+    this.color = `hsl(${Math.random() * 360}, 80%, 60%)`;
+    this.size = Math.random() * 6 + 3;
     this.rotation = Math.random() * 360;
-    this.rotationSpeed = (Math.random() - 0.5) * 10;
+    this.rotationSpeed = (Math.random() - 0.5) * 8;
+    this.life = 0;
+    this.maxLife = 4000; // 4 seconds
   }
 
   update(): void {
     this.x += this.vx;
     this.y += this.vy;
-    this.vy += 0.3; // gravity
+    this.vy += 0.2; // gravity
+    this.vx *= 0.998; // air resistance
+    this.vy *= 0.998; // air resistance
     this.rotation += this.rotationSpeed;
+    this.life += 16; // Assuming ~60fps
+  }
+
+  isAlive(): boolean {
+    return this.life < this.maxLife && 
+           this.x > -50 && 
+           this.x < window.innerWidth + 50 && 
+           this.y > -50 && 
+           this.y < window.innerHeight + 50;
   }
 
   draw(ctx: CanvasRenderingContext2D): void {
+    // Fade out as particle ages
+    const alpha = Math.max(0, 1 - (this.life / this.maxLife));
+    
     ctx.save();
     ctx.translate(this.x, this.y);
     ctx.rotate(this.rotation * Math.PI / 180);
+    ctx.globalAlpha = alpha;
     ctx.fillStyle = this.color;
     ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
     ctx.restore();
