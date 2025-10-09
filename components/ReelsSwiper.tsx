@@ -7,9 +7,9 @@ import "swiper/css/mousewheel";
 
 type Reel = { id: string; render: (active: boolean, reelId: string) => React.ReactNode; };
 
-export default function ReelsSwiper({ items, onSlideChange }: { items: Reel[]; onSlideChange?: (index: number) => void }) {
+export default function ReelsSwiper({ items, onSlideChange, initialIndex = 0 }: { items: Reel[]; onSlideChange?: (index: number) => void; initialIndex?: number }) {
   const ref = useRef<any>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(initialIndex);
   
   return (
     <div className="h-app no-overscroll" style={{ touchAction: "pan-y" }}>
@@ -17,6 +17,7 @@ export default function ReelsSwiper({ items, onSlideChange }: { items: Reel[]; o
         ref={ref}
         direction="vertical"
         slidesPerView={1}
+        initialSlide={initialIndex}
         mousewheel={{
           forceToAxis: true,
           sensitivity: 1,

@@ -22,8 +22,8 @@ export class SimpleConfetti {
     this.canvas.height = window.innerHeight;
     document.body.appendChild(this.canvas);
 
-    // Create particles - more for full screen effect
-    for (let i = 0; i < 150; i++) {
+    // Create particles - MASSIVE explosion
+    for (let i = 0; i < 250; i++) {
       this.particles.push(new ConfettiParticle());
     }
 
@@ -90,13 +90,13 @@ class ConfettiParticle {
   maxLife: number;
 
   constructor() {
-    // Start from random position across the top of the screen
-    this.x = Math.random() * window.innerWidth;
-    this.y = -10; // Start above the screen
-    this.vx = (Math.random() - 0.5) * 4; // Gentle horizontal drift
-    this.vy = Math.random() * 3 + 2; // Fall down with some variation
+    // MASSIVE center explosion that covers full screen
+    this.x = window.innerWidth / 2;
+    this.y = window.innerHeight / 2;
+    this.vx = (Math.random() - 0.5) * 24; // HUGE horizontal spread
+    this.vy = (Math.random() - 0.5) * 24; // HUGE vertical spread
     this.color = `hsl(${Math.random() * 360}, 80%, 60%)`;
-    this.size = Math.random() * 6 + 3;
+    this.size = Math.random() * 12 + 6; // Much bigger confetti
     this.rotation = Math.random() * 360;
     this.rotationSpeed = (Math.random() - 0.5) * 8;
     this.life = 0;

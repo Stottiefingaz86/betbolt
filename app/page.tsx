@@ -2,6 +2,7 @@
 import { useViewportHeight } from "@/hooks/useViewportHeight";
 import ReelsSwiper from "@/components/ReelsSwiper";
 import { useState, useRef, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { BetSlip365 } from "@/components/betslip/BetSlip365";
 import { useBetSlipStore } from "@/lib/store/bet-slip";
 import LiquidEther from "@/components/LiquidEther";
@@ -14,12 +15,36 @@ import ShinyText from "@/components/ShinyText";
 
 export default function Page() {
   useViewportHeight();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [currentReelIndex, setCurrentReelIndex] = useState(0);
   const [isBetSlipOpen, setIsBetSlipOpen] = useState(false);
   const [isBettingOverlayOpen, setIsBettingOverlayOpen] = useState(false);
   const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
   const [isAIDrawerOpen, setIsAIDrawerOpen] = useState(false);
   const [currentMatchForAI, setCurrentMatchForAI] = useState<string | null>(null);
+
+  // Handle URL-based reel navigation
+  useEffect(() => {
+    const reelId = searchParams.get('reel');
+    if (reelId) {
+      const reelIndex = reels.findIndex(reel => reel.id === reelId);
+      if (reelIndex !== -1) {
+        setCurrentReelIndex(reelIndex);
+      }
+    }
+  }, [searchParams]);
+
+  // Update URL when reel changes
+  const handleReelChange = (newIndex: number) => {
+    setCurrentReelIndex(newIndex);
+    const reelId = reels[newIndex]?.id;
+    if (reelId) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('reel', reelId);
+      router.replace(url.pathname + url.search, { scroll: false });
+    }
+  };
 
   // AI Insights data for different matches
   const getAIInsights = (matchData: string | null) => {
@@ -3767,7 +3792,8 @@ export default function Page() {
 
       <ReelsSwiper 
         items={reels} 
-        onSlideChange={(index) => setCurrentReelIndex(index)}
+        onSlideChange={handleReelChange}
+        initialIndex={currentReelIndex}
       />
       
       {/* My Bets Modal */}
@@ -4082,7 +4108,7 @@ export default function Page() {
       {isAIDrawerOpen && (
         <div className="fixed inset-0 z-50 flex items-end justify-center">
           <div className="absolute inset-0 bg-black/50" onClick={() => setIsAIDrawerOpen(false)}></div>
-          <div className="relative bg-white/95 backdrop-blur-xl rounded-t-2xl w-full max-w-md max-h-[90vh] overflow-hidden border-t border-white/20 flex flex-col">
+          <div className="relative bg-white/95 backdrop-blur-xl rounded-t-2xl w-full max-w-md max-h-[50vh] overflow-hidden border-t border-white/20 flex flex-col">
             {/* Handle */}
             <div className="flex justify-center py-3">
               <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
@@ -4178,7 +4204,7 @@ export default function Page() {
       {isMarketsDrawerOpen && (
         <div className="fixed inset-0 z-50 flex items-end justify-center">
           <div className="absolute inset-0 bg-black/50" onClick={() => setIsMarketsDrawerOpen(false)}></div>
-          <div className="relative bg-white/95 backdrop-blur-xl rounded-t-2xl w-full max-w-md max-h-[90vh] overflow-hidden border-t border-white/20 flex flex-col">
+          <div className="relative bg-white/95 backdrop-blur-xl rounded-t-2xl w-full max-w-md max-h-[50vh] overflow-hidden border-t border-white/20 flex flex-col">
             {/* Handle */}
             <div className="flex justify-center py-3">
               <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
