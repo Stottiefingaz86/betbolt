@@ -22,7 +22,106 @@ export default function Page() {
 
   // AI Insights data for different matches
   const getAIInsights = (matchData: string | null) => {
-    const defaultInsight = {
+    const insights = {
+      'Liverpool vs Arsenal': {
+        title: 'Liverpool vs Arsenal',
+        league: 'Premier League',
+        time: 'Today 3:00 PM GMT',
+        analysis: "Based on recent form and head-to-head records, Liverpool has a 72% win probability. Key factors: Salah's home scoring record (8 goals in last 5), Arsenal's away struggles (1 win in last 4), and Liverpool's dominance at Anfield.",
+        insights: [
+          "Liverpool unbeaten in last 12 home matches vs Arsenal",
+          "Salah has scored in 4 of last 5 meetings",
+          "Arsenal conceded 6 goals in last 3 away games"
+        ],
+        confidence: 78
+      },
+      'Chiefs vs Bills': {
+        title: 'Chiefs vs Bills',
+        league: 'NFL',
+        time: 'Today 8:20 PM EST',
+        analysis: "Based on recent performance, team lineups, and historical data, the Chiefs have a 68% win probability. Key factors: Mahomes' home record (12-3 last 15), Bills' road struggles (3-4 this season), and weather conditions favoring passing game.",
+        insights: [
+          "Chiefs defense allowing 18.2 PPG at home (vs 24.1 away)",
+          "Bills 0-3 ATS in last 3 road games vs AFC West",
+          "Over 47.5 hit in 4 of last 5 meetings"
+        ],
+        confidence: 85
+      },
+      'Warriors vs Lakers': {
+        title: 'Warriors vs Lakers',
+        league: 'NBA',
+        time: 'Tonight 8:00 PM EST',
+        analysis: "Warriors have a 64% win probability based on recent form and matchup advantages. Key factors: Curry's hot streak (31.2 PPG last 5 games), Lakers' defensive struggles (allowing 118 PPG), and home court advantage.",
+        insights: [
+          "Curry averaging 31.2 PPG in last 5 games",
+          "Lakers allowing 118 PPG (4th worst in NBA)",
+          "Warriors 8-2 at home this season"
+        ],
+        confidence: 72
+      },
+      'Man City vs Real Madrid': {
+        title: 'Man City vs Real Madrid',
+        league: 'Champions League',
+        time: 'Today 3:00 PM CET',
+        analysis: "Man City has a 71% win probability based on current form and tactical matchups. Key factors: Haaland's scoring form (12 goals in 8 games), Real Madrid's defensive vulnerabilities, and City's home advantage.",
+        insights: [
+          "Haaland has 12 goals in last 8 matches",
+          "Real Madrid conceded 8 goals in last 4 away games",
+          "City unbeaten in last 10 home Champions League matches"
+        ],
+        confidence: 81
+      },
+      'Kentucky Derby': {
+        title: 'Kentucky Derby',
+        league: 'Horse Racing',
+        time: 'Today 6:57 PM EST',
+        analysis: "Thunder Strike has a 23% win probability based on recent form and track conditions. Key factors: Strong finishing kick, good draw position (gate 7), and excellent training times leading up to the race.",
+        insights: [
+          "Thunder Strike won last 2 races by 4+ lengths",
+          "Jockey has 3 Kentucky Derby wins",
+          "Track conditions favor front-running horses"
+        ],
+        confidence: 67
+      },
+      'Masters Tournament': {
+        title: 'Masters Tournament',
+        league: 'PGA Tour',
+        time: 'Today 2:00 PM EST',
+        analysis: "Tiger Woods has a 15% win probability based on his Augusta mastery and recent form. Key factors: 5-time Masters champion, excellent course knowledge, and strong putting performance this season.",
+        insights: [
+          "Tiger has 5 Masters victories (tied for 2nd all-time)",
+          "Averaging 1.68 putts per hole this season",
+          "Hasn't missed a cut at Augusta in 23 years"
+        ],
+        confidence: 58
+      },
+      'Monaco Grand Prix': {
+        title: 'Monaco Grand Prix',
+        league: 'Formula 1',
+        time: 'Today 3:00 PM CET',
+        analysis: "Lewis Hamilton has a 28% win probability based on Monaco's unique demands and his experience. Key factors: 3-time Monaco winner, strong qualifying performance, and excellent tire management skills.",
+        insights: [
+          "Hamilton has 3 Monaco GP victories",
+          "Qualified 2nd in 4 of last 5 Monaco races",
+          "Mercedes strong in slow-speed corners"
+        ],
+        confidence: 69
+      },
+      'Arsenal vs Chelsea': {
+        title: 'Arsenal vs Chelsea',
+        league: 'Premier League',
+        time: 'Today 3:00 PM GMT',
+        analysis: "Arsenal has a 66% win probability based on current form and home advantage. Key factors: Strong home record (8-1-1), Chelsea's defensive struggles, and Arsenal's attacking momentum.",
+        insights: [
+          "Arsenal 8-1-1 at home this season",
+          "Chelsea conceded 12 goals in last 5 matches",
+          "Arsenal scoring 2.3 goals per game at home"
+        ],
+        confidence: 74
+      }
+    };
+    
+    return insights[matchData] || {
       title: matchData || 'Match Analysis',
       league: 'Sports',
       time: 'Today',
@@ -34,127 +133,6 @@ export default function Page() {
       ],
       confidence: 65
     };
-
-    if (!matchData) {
-      return defaultInsight;
-    }
-
-    switch (matchData) {
-      case 'Liverpool vs Arsenal':
-        return {
-          title: 'Liverpool vs Arsenal',
-          league: 'Premier League',
-          time: 'Today 3:00 PM GMT',
-          analysis: "Based on recent form and head-to-head records, Liverpool has a 72% win probability. Key factors: Salah's home scoring record (8 goals in last 5), Arsenal's away struggles (1 win in last 4), and Liverpool's dominance at Anfield.",
-          insights: [
-            "Liverpool unbeaten in last 12 home matches vs Arsenal",
-            "Salah has scored in 4 of last 5 meetings",
-            "Arsenal conceded 6 goals in last 3 away games"
-          ],
-          confidence: 78
-        };
-      
-      case 'Chiefs vs Bills':
-        return {
-          title: 'Chiefs vs Bills',
-          league: 'NFL',
-          time: 'Today 8:20 PM EST',
-          analysis: "Based on recent performance, team lineups, and historical data, the Chiefs have a 68% win probability. Key factors: Mahomes' home record (12-3 last 15), Bills' road struggles (3-4 this season), and weather conditions favoring passing game.",
-          insights: [
-            "Chiefs defense allowing 18.2 PPG at home (vs 24.1 away)",
-            "Bills 0-3 ATS in last 3 road games vs AFC West",
-            "Over 47.5 hit in 4 of last 5 meetings"
-          ],
-          confidence: 85
-        };
-      
-      case 'Warriors vs Lakers':
-        return {
-          title: 'Warriors vs Lakers',
-          league: 'NBA',
-          time: 'Tonight 8:00 PM EST',
-          analysis: "Warriors have a 64% win probability based on recent form and matchup advantages. Key factors: Curry's hot streak (31.2 PPG last 5 games), Lakers' defensive struggles (allowing 118 PPG), and home court advantage.",
-          insights: [
-            "Curry averaging 31.2 PPG in last 5 games",
-            "Lakers allowing 118 PPG (4th worst in NBA)",
-            "Warriors 8-2 at home this season"
-          ],
-          confidence: 72
-        };
-      
-      case 'Man City vs Real Madrid':
-        return {
-          title: 'Man City vs Real Madrid',
-          league: 'Champions League',
-          time: 'Today 3:00 PM CET',
-          analysis: "Man City has a 71% win probability based on current form and tactical matchups. Key factors: Haaland's scoring form (12 goals in 8 games), Real Madrid's defensive vulnerabilities, and City's home advantage.",
-          insights: [
-            "Haaland has 12 goals in last 8 matches",
-            "Real Madrid conceded 8 goals in last 4 away games",
-            "City unbeaten in last 10 home Champions League matches"
-          ],
-          confidence: 81
-        };
-      
-      case 'Kentucky Derby':
-        return {
-          title: 'Kentucky Derby',
-          league: 'Horse Racing',
-          time: 'Today 6:57 PM EST',
-          analysis: "Thunder Strike has a 23% win probability based on recent form and track conditions. Key factors: Strong finishing kick, good draw position (gate 7), and excellent training times leading up to the race.",
-          insights: [
-            "Thunder Strike won last 2 races by 4+ lengths",
-            "Jockey has 3 Kentucky Derby wins",
-            "Track conditions favor front-running horses"
-          ],
-          confidence: 67
-        };
-      
-      case 'Masters Tournament':
-        return {
-          title: 'Masters Tournament',
-          league: 'PGA Tour',
-          time: 'Today 2:00 PM EST',
-          analysis: "Tiger Woods has a 15% win probability based on his Augusta mastery and recent form. Key factors: 5-time Masters champion, excellent course knowledge, and strong putting performance this season.",
-          insights: [
-            "Tiger has 5 Masters victories (tied for 2nd all-time)",
-            "Averaging 1.68 putts per hole this season",
-            "Hasn't missed a cut at Augusta in 23 years"
-          ],
-          confidence: 58
-        };
-      
-      case 'Monaco Grand Prix':
-        return {
-          title: 'Monaco Grand Prix',
-          league: 'Formula 1',
-          time: 'Today 3:00 PM CET',
-          analysis: "Lewis Hamilton has a 28% win probability based on Monaco's unique demands and his experience. Key factors: 3-time Monaco winner, strong qualifying performance, and excellent tire management skills.",
-          insights: [
-            "Hamilton has 3 Monaco GP victories",
-            "Qualified 2nd in 4 of last 5 Monaco races",
-            "Mercedes strong in slow-speed corners"
-          ],
-          confidence: 69
-        };
-      
-      case 'Arsenal vs Chelsea':
-        return {
-          title: 'Arsenal vs Chelsea',
-          league: 'Premier League',
-          time: 'Today 3:00 PM GMT',
-          analysis: "Arsenal has a 66% win probability based on current form and home advantage. Key factors: Strong home record (8-1-1), Chelsea's defensive struggles, and Arsenal's attacking momentum.",
-          insights: [
-            "Arsenal 8-1-1 at home this season",
-            "Chelsea conceded 12 goals in last 5 matches",
-            "Arsenal scoring 2.3 goals per game at home"
-          ],
-          confidence: 74
-        };
-      
-      default:
-        return defaultInsight;
-    }
   };
   const [isMarketsDrawerOpen, setIsMarketsDrawerOpen] = useState(false);
   const [showSuccessScreen, setShowSuccessScreen] = useState(false);
