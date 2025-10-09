@@ -3742,21 +3742,35 @@ export default function Page() {
   // Handle URL-based reel navigation
   useEffect(() => {
     const reelId = searchParams.get('reel');
+    console.log('URL reelId:', reelId);
+    console.log('Available reels:', reels.map(r => r.id));
+    
     if (reelId && reels.length > 0) {
       const reelIndex = reels.findIndex(reel => reel.id === reelId);
+      console.log('Found reel index:', reelIndex);
+      
       if (reelIndex !== -1) {
+        console.log('Setting currentReelIndex to:', reelIndex);
         setCurrentReelIndex(reelIndex);
+      } else {
+        console.log('Reel not found, staying on current index:', currentReelIndex);
       }
+    } else {
+      console.log('No reelId in URL or reels not loaded yet');
     }
-  }, [searchParams]);
+  }, [searchParams, reels]);
 
   // Update the handleReelChange function to include URL updating
   const updateHandleReelChange = (newIndex: number) => {
+    console.log('updateHandleReelChange called with index:', newIndex);
     setCurrentReelIndex(newIndex);
     const reelId = reels[newIndex]?.id;
+    console.log('Updating URL with reelId:', reelId);
+    
     if (reelId) {
       const url = new URL(window.location.href);
       url.searchParams.set('reel', reelId);
+      console.log('New URL:', url.pathname + url.search);
       router.replace(url.pathname + url.search, { scroll: false });
     }
   };
