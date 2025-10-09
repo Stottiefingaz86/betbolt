@@ -24,27 +24,6 @@ export default function Page() {
   const [isAIDrawerOpen, setIsAIDrawerOpen] = useState(false);
   const [currentMatchForAI, setCurrentMatchForAI] = useState<string | null>(null);
 
-  // Handle URL-based reel navigation
-  useEffect(() => {
-    const reelId = searchParams.get('reel');
-    if (reelId) {
-      const reelIndex = reels.findIndex(reel => reel.id === reelId);
-      if (reelIndex !== -1) {
-        setCurrentReelIndex(reelIndex);
-      }
-    }
-  }, [searchParams]);
-
-  // Update URL when reel changes
-  const handleReelChange = (newIndex: number) => {
-    setCurrentReelIndex(newIndex);
-    const reelId = reels[newIndex]?.id;
-    if (reelId) {
-      const url = new URL(window.location.href);
-      url.searchParams.set('reel', reelId);
-      router.replace(url.pathname + url.search, { scroll: false });
-    }
-  };
 
   // AI Insights data for different matches
   const getAIInsights = (matchData: string | null) => {
@@ -3754,6 +3733,28 @@ export default function Page() {
       },
     }
   ];
+
+  // Handle URL-based reel navigation
+  useEffect(() => {
+    const reelId = searchParams.get('reel');
+    if (reelId && reels.length > 0) {
+      const reelIndex = reels.findIndex(reel => reel.id === reelId);
+      if (reelIndex !== -1) {
+        setCurrentReelIndex(reelIndex);
+      }
+    }
+  }, [searchParams]);
+
+  // Update URL when reel changes
+  const handleReelChange = (newIndex: number) => {
+    setCurrentReelIndex(newIndex);
+    const reelId = reels[newIndex]?.id;
+    if (reelId) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('reel', reelId);
+      router.replace(url.pathname + url.search, { scroll: false });
+    }
+  };
 
   return (
     <div
