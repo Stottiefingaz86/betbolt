@@ -24,6 +24,11 @@ export default function Page() {
   const [isAIDrawerOpen, setIsAIDrawerOpen] = useState(false);
   const [currentMatchForAI, setCurrentMatchForAI] = useState<string | null>(null);
 
+  // Update URL when reel changes
+  const handleReelChange = (newIndex: number) => {
+    setCurrentReelIndex(newIndex);
+    // We'll get the reelId after the reels array is defined
+  };
 
   // AI Insights data for different matches
   const getAIInsights = (matchData: string | null) => {
@@ -3745,8 +3750,8 @@ export default function Page() {
     }
   }, [searchParams]);
 
-  // Update URL when reel changes
-  const handleReelChange = (newIndex: number) => {
+  // Update the handleReelChange function to include URL updating
+  const updateHandleReelChange = (newIndex: number) => {
     setCurrentReelIndex(newIndex);
     const reelId = reels[newIndex]?.id;
     if (reelId) {
@@ -3793,7 +3798,7 @@ export default function Page() {
 
       <ReelsSwiper 
         items={reels} 
-        onSlideChange={handleReelChange}
+        onSlideChange={updateHandleReelChange}
         initialIndex={currentReelIndex}
       />
       
