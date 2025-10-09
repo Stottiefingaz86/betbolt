@@ -17,6 +17,123 @@ export default function Page() {
   const [isBetSlipOpen, setIsBetSlipOpen] = useState(false);
   const [isBettingOverlayOpen, setIsBettingOverlayOpen] = useState(false);
   const [isStatsDrawerOpen, setIsStatsDrawerOpen] = useState(false);
+  const [isAIDrawerOpen, setIsAIDrawerOpen] = useState(false);
+  const [currentMatchForAI, setCurrentMatchForAI] = useState<string | null>(null);
+
+  // AI Insights data for different matches
+  const getAIInsights = (matchData: string | null) => {
+    const insights = {
+      'Liverpool vs Arsenal': {
+        title: 'Liverpool vs Arsenal',
+        league: 'Premier League',
+        time: 'Today 3:00 PM GMT',
+        analysis: "Based on recent form and head-to-head records, Liverpool has a 72% win probability. Key factors: Salah's home scoring record (8 goals in last 5), Arsenal's away struggles (1 win in last 4), and Liverpool's dominance at Anfield.",
+        insights: [
+          "Liverpool unbeaten in last 12 home matches vs Arsenal",
+          "Salah has scored in 4 of last 5 meetings",
+          "Arsenal conceded 6 goals in last 3 away games"
+        ],
+        confidence: 78
+      },
+      'Chiefs vs Bills': {
+        title: 'Chiefs vs Bills',
+        league: 'NFL',
+        time: 'Today 8:20 PM EST',
+        analysis: "Based on recent performance, team lineups, and historical data, the Chiefs have a 68% win probability. Key factors: Mahomes' home record (12-3 last 15), Bills' road struggles (3-4 this season), and weather conditions favoring passing game.",
+        insights: [
+          "Chiefs defense allowing 18.2 PPG at home (vs 24.1 away)",
+          "Bills 0-3 ATS in last 3 road games vs AFC West",
+          "Over 47.5 hit in 4 of last 5 meetings"
+        ],
+        confidence: 85
+      },
+      'Warriors vs Lakers': {
+        title: 'Warriors vs Lakers',
+        league: 'NBA',
+        time: 'Tonight 8:00 PM EST',
+        analysis: "Warriors have a 64% win probability based on recent form and matchup advantages. Key factors: Curry's hot streak (31.2 PPG last 5 games), Lakers' defensive struggles (allowing 118 PPG), and home court advantage.",
+        insights: [
+          "Curry averaging 31.2 PPG in last 5 games",
+          "Lakers allowing 118 PPG (4th worst in NBA)",
+          "Warriors 8-2 at home this season"
+        ],
+        confidence: 72
+      },
+      'Man City vs Real Madrid': {
+        title: 'Man City vs Real Madrid',
+        league: 'Champions League',
+        time: 'Today 3:00 PM CET',
+        analysis: "Man City has a 71% win probability based on current form and tactical matchups. Key factors: Haaland's scoring form (12 goals in 8 games), Real Madrid's defensive vulnerabilities, and City's home advantage.",
+        insights: [
+          "Haaland has 12 goals in last 8 matches",
+          "Real Madrid conceded 8 goals in last 4 away games",
+          "City unbeaten in last 10 home Champions League matches"
+        ],
+        confidence: 81
+      },
+      'Kentucky Derby': {
+        title: 'Kentucky Derby',
+        league: 'Horse Racing',
+        time: 'Today 6:57 PM EST',
+        analysis: "Thunder Strike has a 23% win probability based on recent form and track conditions. Key factors: Strong finishing kick, good draw position (gate 7), and excellent training times leading up to the race.",
+        insights: [
+          "Thunder Strike won last 2 races by 4+ lengths",
+          "Jockey has 3 Kentucky Derby wins",
+          "Track conditions favor front-running horses"
+        ],
+        confidence: 67
+      },
+      'Masters Tournament': {
+        title: 'Masters Tournament',
+        league: 'PGA Tour',
+        time: 'Today 2:00 PM EST',
+        analysis: "Tiger Woods has a 15% win probability based on his Augusta mastery and recent form. Key factors: 5-time Masters champion, excellent course knowledge, and strong putting performance this season.",
+        insights: [
+          "Tiger has 5 Masters victories (tied for 2nd all-time)",
+          "Averaging 1.68 putts per hole this season",
+          "Hasn't missed a cut at Augusta in 23 years"
+        ],
+        confidence: 58
+      },
+      'Monaco Grand Prix': {
+        title: 'Monaco Grand Prix',
+        league: 'Formula 1',
+        time: 'Today 3:00 PM CET',
+        analysis: "Lewis Hamilton has a 28% win probability based on Monaco's unique demands and his experience. Key factors: 3-time Monaco winner, strong qualifying performance, and excellent tire management skills.",
+        insights: [
+          "Hamilton has 3 Monaco GP victories",
+          "Qualified 2nd in 4 of last 5 Monaco races",
+          "Mercedes strong in slow-speed corners"
+        ],
+        confidence: 69
+      },
+      'Arsenal vs Chelsea': {
+        title: 'Arsenal vs Chelsea',
+        league: 'Premier League',
+        time: 'Today 3:00 PM GMT',
+        analysis: "Arsenal has a 66% win probability based on current form and home advantage. Key factors: Strong home record (8-1-1), Chelsea's defensive struggles, and Arsenal's attacking momentum.",
+        insights: [
+          "Arsenal 8-1-1 at home this season",
+          "Chelsea conceded 12 goals in last 5 matches",
+          "Arsenal scoring 2.3 goals per game at home"
+        ],
+        confidence: 74
+      }
+    };
+    
+    return insights[matchData] || {
+      title: matchData || 'Match Analysis',
+      league: 'Sports',
+      time: 'Today',
+      analysis: "AI analysis is being processed. Based on available data, this appears to be a competitive matchup with multiple factors influencing the outcome.",
+      insights: [
+        "Historical data suggests competitive matchup",
+        "Multiple factors influencing outcome",
+        "Recommend checking live updates"
+      ],
+      confidence: 65
+    };
+  };
   const [isMarketsDrawerOpen, setIsMarketsDrawerOpen] = useState(false);
   const [showSuccessScreen, setShowSuccessScreen] = useState(false);
   const [showBetNotification, setShowBetNotification] = useState(false);
@@ -205,20 +322,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
             </div>
 
             {onboardingStep === 1 && (
@@ -435,20 +538,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
 
             </div>
 
@@ -478,13 +567,15 @@ export default function Page() {
               <div className="flex items-center space-x-4 mb-3">
                 {/* Stats */}
                 <button 
-                  onClick={() => setIsStatsDrawerOpen(true)}
+                  onClick={() => {
+                    setCurrentMatchForAI('Chiefs vs Bills');
+                    setIsAIDrawerOpen(true);
+                  }}
                   className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20"
                 >
                   <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  <span className="text-white/70 text-xs">Stats</span>
                 </button>
 
                 {/* More Markets */}
@@ -509,20 +600,32 @@ export default function Page() {
               </div>
 
               {/* CTA */}
-              <button 
-                onClick={() => {
-                  setCurrentBet({
-                    match: "Liverpool vs Arsenal",
-                    market: "First Goalscorer",
-                    selection: "Mohamed Salah",
-                    odds: 450
-                  });
-                  setIsBettingOverlayOpen(true);
-                }}
-                className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95 mb-2"
-              >
-                Bet Now <span className="font-bold">+450</span>
-              </button>
+              <div className="flex items-center space-x-3 mb-2">
+                <button 
+                  onClick={() => {
+                    setCurrentBet({
+                      match: "Liverpool vs Arsenal",
+                      market: "First Goalscorer",
+                      selection: "Mohamed Salah",
+                      odds: 450
+                    });
+                    setIsBettingOverlayOpen(true);
+                  }}
+                  className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95"
+                >
+                  Bet Now <span className="font-bold">+450</span>
+                </button>
+                
+                {/* Share Button */}
+                <button 
+                  onClick={() => setIsShareDrawerOpen(true)}
+                  className="py-3 px-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center transition-all duration-200 hover:bg-white/15 active:scale-95"
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
+                  </svg>
+                </button>
+              </div>
 
             </div>
           </div>
@@ -651,20 +754,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
 
             </div>
 
@@ -694,13 +783,15 @@ export default function Page() {
               <div className="flex items-center space-x-4 mb-3">
                 {/* Stats */}
                 <button 
-                  onClick={() => setIsStatsDrawerOpen(true)}
+                  onClick={() => {
+                    setCurrentMatchForAI('Chiefs vs Bills');
+                    setIsAIDrawerOpen(true);
+                  }}
                   className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20"
                 >
                   <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  <span className="text-white/70 text-xs">Stats</span>
                 </button>
 
                 {/* More Markets */}
@@ -739,20 +830,32 @@ export default function Page() {
               </div>
 
               {/* CTA */}
-              <button 
-                onClick={() => {
-                  setCurrentBet({
-                    match: "Chiefs vs Bills",
-                    market: "Parlay",
-                    selection: "Chiefs + Kelce TD + Over 47.5",
-                    odds: 500
-                  });
-                  setIsBettingOverlayOpen(true);
-                }}
-                className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95 mb-2"
-              >
-                Bet Now <span className="font-bold">+500</span>
-              </button>
+              <div className="flex items-center space-x-3 mb-2">
+                <button 
+                  onClick={() => {
+                    setCurrentBet({
+                      match: "Chiefs vs Bills",
+                      market: "Parlay",
+                      selection: "Chiefs + Kelce TD + Over 47.5",
+                      odds: 500
+                    });
+                    setIsBettingOverlayOpen(true);
+                  }}
+                  className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95"
+                >
+                  Bet Now <span className="font-bold">+500</span>
+                </button>
+                
+                {/* Share Button */}
+                <button 
+                  onClick={() => setIsShareDrawerOpen(true)}
+                  className="py-3 px-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center transition-all duration-200 hover:bg-white/15 active:scale-95"
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
+                  </svg>
+                </button>
+              </div>
 
             </div>
           </div>
@@ -880,20 +983,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
 
             </div>
 
@@ -923,13 +1012,15 @@ export default function Page() {
               <div className="flex items-center space-x-4 mb-3">
                 {/* Stats */}
                 <button 
-                  onClick={() => setIsStatsDrawerOpen(true)}
+                  onClick={() => {
+                    setCurrentMatchForAI('Chiefs vs Bills');
+                    setIsAIDrawerOpen(true);
+                  }}
                   className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20"
                 >
                   <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  <span className="text-white/70 text-xs">Stats</span>
                 </button>
 
                 {/* More Markets */}
@@ -954,20 +1045,32 @@ export default function Page() {
               </div>
 
               {/* CTA */}
-              <button 
-                onClick={() => {
-                  setCurrentBet({
-                    match: "Chiefs vs Bills",
-                    market: "First Touchdown",
-                    selection: "Travis Kelce",
-                    odds: 350
-                  });
-                  setIsBettingOverlayOpen(true);
-                }}
-                className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95 mb-2"
-              >
-                Bet Now <span className="font-bold">+350</span>
-              </button>
+              <div className="flex items-center space-x-3 mb-2">
+                <button 
+                  onClick={() => {
+                    setCurrentBet({
+                      match: "Chiefs vs Bills",
+                      market: "First Touchdown",
+                      selection: "Travis Kelce",
+                      odds: 350
+                    });
+                    setIsBettingOverlayOpen(true);
+                  }}
+                  className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95"
+                >
+                  Bet Now <span className="font-bold">+350</span>
+                </button>
+                
+                {/* Share Button */}
+                <button 
+                  onClick={() => setIsShareDrawerOpen(true)}
+                  className="py-3 px-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center transition-all duration-200 hover:bg-white/15 active:scale-95"
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
+                  </svg>
+                </button>
+              </div>
 
             </div>
           </div>
@@ -1062,20 +1165,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
 
             </div>
             <div className="absolute bottom-24 left-6 right-6 z-20">
@@ -1098,11 +1187,13 @@ export default function Page() {
                 </div>
               </div>
               <div className="flex items-center space-x-4 mb-3">
-                <button onClick={() => setIsStatsDrawerOpen(true)} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
+                <button onClick={() => {
+                  setCurrentMatchForAI('Man City vs Chelsea');
+                  setIsAIDrawerOpen(true);
+                }} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
                   <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  <span className="text-white/70 text-xs">Stats</span>
                 </button>
                 <button onClick={() => setIsMarketsDrawerOpen(true)} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
                   <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1116,17 +1207,29 @@ export default function Page() {
                 <div className="text-white/80 text-sm font-medium">Total Goals</div>
                 <div className="text-white text-xl font-bold">Over 3.1 Goals</div>
               </div>
-              <button onClick={() => {
-                setCurrentBet({
-                  match: "Man City vs Chelsea",
-                  market: "Total Goals",
-                  selection: "Over 3.1",
-                  odds: -110
-                });
-                setIsBettingOverlayOpen(true);
-              }} className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95 mb-2">
-                Bet Now <span className="font-bold">-110</span>
-              </button>
+              <div className="flex items-center space-x-3 mb-2">
+                <button onClick={() => {
+                  setCurrentBet({
+                    match: "Man City vs Chelsea",
+                    market: "Total Goals",
+                    selection: "Over 3.1",
+                    odds: -110
+                  });
+                  setIsBettingOverlayOpen(true);
+                }} className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95">
+                  Bet Now <span className="font-bold">-110</span>
+                </button>
+                
+                {/* Share Button */}
+                <button 
+                  onClick={() => setIsShareDrawerOpen(true)}
+                  className="py-3 px-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center transition-all duration-200 hover:bg-white/15 active:scale-95"
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         );
@@ -1220,20 +1323,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
 
             </div>
             <div className="absolute bottom-24 left-6 right-6 z-20">
@@ -1256,11 +1345,13 @@ export default function Page() {
                 </div>
               </div>
               <div className="flex items-center space-x-4 mb-3">
-                <button onClick={() => setIsStatsDrawerOpen(true)} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
+                <button onClick={() => {
+                  setCurrentMatchForAI('Warriors vs Lakers');
+                  setIsAIDrawerOpen(true);
+                }} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
                   <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  <span className="text-white/70 text-xs">Stats</span>
                 </button>
                 <button onClick={() => setIsMarketsDrawerOpen(true)} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
                   <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1274,17 +1365,29 @@ export default function Page() {
                 <div className="text-white/80 text-sm font-medium">Player Points</div>
                 <div className="text-white text-xl font-bold">LeBron James 25+ Points</div>
               </div>
-              <button onClick={() => {
-                setCurrentBet({
-                  match: "Lakers vs Warriors",
-                  market: "Player Points",
-                  selection: "LeBron James 25+",
-                  odds: -120
-                });
-                setIsBettingOverlayOpen(true);
-              }} className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95 mb-2">
-                Bet Now <span className="font-bold">-120</span>
-              </button>
+              <div className="flex items-center space-x-3 mb-2">
+                <button onClick={() => {
+                  setCurrentBet({
+                    match: "Lakers vs Warriors",
+                    market: "Player Points",
+                    selection: "LeBron James 25+",
+                    odds: -120
+                  });
+                  setIsBettingOverlayOpen(true);
+                }} className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95">
+                  Bet Now <span className="font-bold">-120</span>
+                </button>
+                
+                {/* Share Button */}
+                <button 
+                  onClick={() => setIsShareDrawerOpen(true)}
+                  className="py-3 px-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center transition-all duration-200 hover:bg-white/15 active:scale-95"
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         );
@@ -1414,20 +1517,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
 
             </div>
 
@@ -1442,7 +1531,10 @@ export default function Page() {
               {/* Tournament & Jackpots Buttons */}
               <div className="flex items-center space-x-3 mb-3">
                 <button 
-                  onClick={() => setIsStatsDrawerOpen(true)}
+                  onClick={() => {
+                    setCurrentMatchForAI('Liverpool vs Arsenal');
+                    setIsAIDrawerOpen(true);
+                  }}
                   className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20"
                 >
                   <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1473,12 +1565,24 @@ export default function Page() {
               </div>
 
               {/* Play Now Button */}
-              <button 
-                onClick={() => setIsCasinoGameOpen(true)}
-                className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95 mb-2"
-              >
-                Play Now
-              </button>
+              <div className="flex items-center space-x-3 mb-2">
+                <button 
+                  onClick={() => setIsCasinoGameOpen(true)}
+                  className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95"
+                >
+                  Play Now
+                </button>
+                
+                {/* Share Button */}
+                <button 
+                  onClick={() => setIsShareDrawerOpen(true)}
+                  className="py-3 px-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center transition-all duration-200 hover:bg-white/15 active:scale-95"
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         );
@@ -1592,20 +1696,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
 
             </div>
 
@@ -1620,11 +1710,13 @@ export default function Page() {
               </div>
 
               <div className="flex items-center space-x-4 mb-3">
-                <button onClick={() => setIsStatsDrawerOpen(true)} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
+                <button onClick={() => {
+                  setCurrentMatchForAI('Man City vs Real Madrid');
+                  setIsAIDrawerOpen(true);
+                }} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
                   <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  <span className="text-white/70 text-xs">Stats</span>
                 </button>
 
                 <button onClick={() => setIsMarketsDrawerOpen(true)} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
@@ -1646,20 +1738,32 @@ export default function Page() {
                 </div>
               </div>
 
-              <button 
-                onClick={() => {
-                  setCurrentBet({
-                    match: "Premier League Parlay",
-                    market: "Parlay Bundle",
-                    selection: "Man City + Arsenal Goals + Liverpool Clean Sheet",
-                    odds: 850
-                  });
-                  setIsBettingOverlayOpen(true);
-                }}
-                className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95 mb-2"
-              >
-                Bet Now <span className="font-bold">+850</span>
-              </button>
+              <div className="flex items-center space-x-3 mb-2">
+                <button 
+                  onClick={() => {
+                    setCurrentBet({
+                      match: "Premier League Parlay",
+                      market: "Parlay Bundle",
+                      selection: "Man City + Arsenal Goals + Liverpool Clean Sheet",
+                      odds: 850
+                    });
+                    setIsBettingOverlayOpen(true);
+                  }}
+                  className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95"
+                >
+                  Bet Now <span className="font-bold">+850</span>
+                </button>
+                
+                {/* Share Button */}
+                <button 
+                  onClick={() => setIsShareDrawerOpen(true)}
+                  className="py-3 px-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center transition-all duration-200 hover:bg-white/15 active:scale-95"
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         );
@@ -1789,20 +1893,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
 
             </div>
 
@@ -1951,20 +2041,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
 
             </div>
 
@@ -1983,11 +2059,13 @@ export default function Page() {
               </div>
 
               <div className="flex items-center space-x-4 mb-3">
-                <button onClick={() => setIsStatsDrawerOpen(true)} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
+                <button onClick={() => {
+                  setCurrentMatchForAI('Man City vs Real Madrid');
+                  setIsAIDrawerOpen(true);
+                }} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
                   <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  <span className="text-white/70 text-xs">Stats</span>
                 </button>
 
                 <button onClick={() => setIsMarketsDrawerOpen(true)} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
@@ -2005,20 +2083,32 @@ export default function Page() {
                 <div className="text-white text-xl font-bold">Stephen Curry Over 4.5</div>
               </div>
 
-              <button 
-                onClick={() => {
-                  setCurrentBet({
-                    match: "Warriors vs Lakers",
-                    market: "3-Pointers Made",
-                    selection: "Stephen Curry Over 4.5",
-                    odds: 180
-                  });
-                  setIsBettingOverlayOpen(true);
-                }}
-                className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95 mb-2"
-              >
-                Bet Now <span className="font-bold">+180</span>
-              </button>
+              <div className="flex items-center space-x-3 mb-2">
+                <button 
+                  onClick={() => {
+                    setCurrentBet({
+                      match: "Warriors vs Lakers",
+                      market: "3-Pointers Made",
+                      selection: "Stephen Curry Over 4.5",
+                      odds: 180
+                    });
+                    setIsBettingOverlayOpen(true);
+                  }}
+                  className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95"
+                >
+                  Bet Now <span className="font-bold">+180</span>
+                </button>
+                
+                {/* Share Button */}
+                <button 
+                  onClick={() => setIsShareDrawerOpen(true)}
+                  className="py-3 px-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center transition-all duration-200 hover:bg-white/15 active:scale-95"
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         );
@@ -2132,20 +2222,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
 
             </div>
 
@@ -2164,11 +2240,13 @@ export default function Page() {
               </div>
 
               <div className="flex items-center space-x-4 mb-3">
-                <button onClick={() => setIsStatsDrawerOpen(true)} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
+                <button onClick={() => {
+                  setCurrentMatchForAI('Man City vs Real Madrid');
+                  setIsAIDrawerOpen(true);
+                }} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
                   <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  <span className="text-white/70 text-xs">Stats</span>
                 </button>
 
                 <button onClick={() => setIsMarketsDrawerOpen(true)} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
@@ -2186,20 +2264,32 @@ export default function Page() {
                 <div className="text-white text-xl font-bold">Erling Haaland</div>
               </div>
 
-              <button 
-                onClick={() => {
-                  setCurrentBet({
-                    match: "Man City vs Real Madrid",
-                    market: "Anytime Goalscorer",
-                    selection: "Erling Haaland",
-                    odds: 220
-                  });
-                  setIsBettingOverlayOpen(true);
-                }}
-                className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95 mb-2"
-              >
-                Bet Now <span className="font-bold">+220</span>
-              </button>
+              <div className="flex items-center space-x-3 mb-2">
+                <button 
+                  onClick={() => {
+                    setCurrentBet({
+                      match: "Man City vs Real Madrid",
+                      market: "Anytime Goalscorer",
+                      selection: "Erling Haaland",
+                      odds: 220
+                    });
+                    setIsBettingOverlayOpen(true);
+                  }}
+                  className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95"
+                >
+                  Bet Now <span className="font-bold">+220</span>
+                </button>
+                
+                {/* Share Button */}
+                <button 
+                  onClick={() => setIsShareDrawerOpen(true)}
+                  className="py-3 px-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center transition-all duration-200 hover:bg-white/15 active:scale-95"
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         );
@@ -2327,20 +2417,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
 
             </div>
 
@@ -2361,11 +2437,13 @@ export default function Page() {
               </div>
 
               <div className="flex items-center space-x-4 mb-3">
-                <button onClick={() => setIsStatsDrawerOpen(true)} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
+                <button onClick={() => {
+                  setCurrentMatchForAI('Man City vs Real Madrid');
+                  setIsAIDrawerOpen(true);
+                }} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
                   <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  <span className="text-white/70 text-xs">Stats</span>
                 </button>
 
                 <button onClick={() => setIsMarketsDrawerOpen(true)} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
@@ -2383,20 +2461,32 @@ export default function Page() {
                 <div className="text-white text-xl font-bold">Thunder Strike</div>
               </div>
 
-              <button 
-                onClick={() => {
-                  setCurrentBet({
-                    match: "Kentucky Derby",
-                    market: "Winner",
-                    selection: "Thunder Strike",
-                    odds: 750
-                  });
-                  setIsBettingOverlayOpen(true);
-                }}
-                className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95 mb-2"
-              >
-                Bet Now <span className="font-bold">+750</span>
-              </button>
+              <div className="flex items-center space-x-3 mb-2">
+                <button 
+                  onClick={() => {
+                    setCurrentBet({
+                      match: "Kentucky Derby",
+                      market: "Winner",
+                      selection: "Thunder Strike",
+                      odds: 750
+                    });
+                    setIsBettingOverlayOpen(true);
+                  }}
+                  className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95"
+                >
+                  Bet Now <span className="font-bold">+750</span>
+                </button>
+                
+                {/* Share Button */}
+                <button 
+                  onClick={() => setIsShareDrawerOpen(true)}
+                  className="py-3 px-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center transition-all duration-200 hover:bg-white/15 active:scale-95"
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         );
@@ -2524,20 +2614,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
 
             </div>
 
@@ -2558,11 +2634,13 @@ export default function Page() {
               </div>
 
               <div className="flex items-center space-x-4 mb-3">
-                <button onClick={() => setIsStatsDrawerOpen(true)} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
+                <button onClick={() => {
+                  setCurrentMatchForAI('Man City vs Real Madrid');
+                  setIsAIDrawerOpen(true);
+                }} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
                   <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  <span className="text-white/70 text-xs">Stats</span>
                 </button>
 
                 <button onClick={() => setIsMarketsDrawerOpen(true)} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
@@ -2580,20 +2658,32 @@ export default function Page() {
                 <div className="text-white text-xl font-bold">Tiger Woods</div>
               </div>
 
-              <button 
-                onClick={() => {
-                  setCurrentBet({
-                    match: "Masters Tournament",
-                    market: "Tournament Winner",
-                    selection: "Tiger Woods",
-                    odds: 1200
-                  });
-                  setIsBettingOverlayOpen(true);
-                }}
-                className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95 mb-2"
-              >
-                Bet Now <span className="font-bold">+1200</span>
-              </button>
+              <div className="flex items-center space-x-3 mb-2">
+                <button 
+                  onClick={() => {
+                    setCurrentBet({
+                      match: "Masters Tournament",
+                      market: "Tournament Winner",
+                      selection: "Tiger Woods",
+                      odds: 1200
+                    });
+                    setIsBettingOverlayOpen(true);
+                  }}
+                  className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95"
+                >
+                  Bet Now <span className="font-bold">+1200</span>
+                </button>
+                
+                {/* Share Button */}
+                <button 
+                  onClick={() => setIsShareDrawerOpen(true)}
+                  className="py-3 px-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center transition-all duration-200 hover:bg-white/15 active:scale-95"
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         );
@@ -2721,20 +2811,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
 
             </div>
 
@@ -2755,11 +2831,13 @@ export default function Page() {
               </div>
 
               <div className="flex items-center space-x-4 mb-3">
-                <button onClick={() => setIsStatsDrawerOpen(true)} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
+                <button onClick={() => {
+                  setCurrentMatchForAI('Man City vs Real Madrid');
+                  setIsAIDrawerOpen(true);
+                }} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
                   <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  <span className="text-white/70 text-xs">Stats</span>
                 </button>
 
                 <button onClick={() => setIsMarketsDrawerOpen(true)} className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20">
@@ -2777,20 +2855,32 @@ export default function Page() {
                 <div className="text-white text-xl font-bold">Lewis Hamilton</div>
               </div>
 
-              <button 
-                onClick={() => {
-                  setCurrentBet({
-                    match: "Monaco Grand Prix",
-                    market: "Race Winner",
-                    selection: "Lewis Hamilton",
-                    odds: 450
-                  });
-                  setIsBettingOverlayOpen(true);
-                }}
-                className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95 mb-2"
-              >
-                Bet Now <span className="font-bold">+450</span>
-              </button>
+              <div className="flex items-center space-x-3 mb-2">
+                <button 
+                  onClick={() => {
+                    setCurrentBet({
+                      match: "Monaco Grand Prix",
+                      market: "Race Winner",
+                      selection: "Lewis Hamilton",
+                      odds: 450
+                    });
+                    setIsBettingOverlayOpen(true);
+                  }}
+                  className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95"
+                >
+                  Bet Now <span className="font-bold">+450</span>
+                </button>
+                
+                {/* Share Button */}
+                <button 
+                  onClick={() => setIsShareDrawerOpen(true)}
+                  className="py-3 px-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center transition-all duration-200 hover:bg-white/15 active:scale-95"
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         );
@@ -2916,20 +3006,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
 
             </div>
 
@@ -3090,20 +3166,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
 
             </div>
 
@@ -3308,20 +3370,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
 
             </div>
 
@@ -3354,13 +3402,15 @@ export default function Page() {
               </div>
               <div className="flex items-center space-x-4 mb-3">
                 <button 
-                  onClick={() => setIsStatsDrawerOpen(true)}
+                  onClick={() => {
+                    setCurrentMatchForAI('Chiefs vs Bills');
+                    setIsAIDrawerOpen(true);
+                  }}
                   className="flex items-center space-x-1 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-lg px-3 py-2 transition-all duration-200 active:scale-95 border border-white/20"
                 >
                   <svg className="w-4 h-4 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
-                  <span className="text-white/70 text-xs">Stats</span>
                 </button>
                 <button 
                   onClick={() => setIsMarketsDrawerOpen(true)}
@@ -3383,20 +3433,32 @@ export default function Page() {
                 <div className="text-white/80 text-sm font-medium">Next Goalscorer</div>
                 <div className="text-white text-xl font-bold">Chelsea to Score Next</div>
               </div>
-              <button 
-                onClick={() => {
-                  setCurrentBet({
-                    match: "Arsenal vs Chelsea",
-                    market: "Next Goalscorer",
-                    selection: "Chelsea to Score Next",
-                    odds: 450
-                  });
-                  setIsBettingOverlayOpen(true);
-                }}
-                className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95 mb-2"
-              >
-                Bet Now <span className="font-bold">+450</span>
-              </button>
+              <div className="flex items-center space-x-3 mb-2">
+                <button 
+                  onClick={() => {
+                    setCurrentBet({
+                      match: "Arsenal vs Chelsea",
+                      market: "Next Goalscorer",
+                      selection: "Chelsea to Score Next",
+                      odds: 450
+                    });
+                    setIsBettingOverlayOpen(true);
+                  }}
+                  className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95"
+                >
+                  Bet Now <span className="font-bold">+450</span>
+                </button>
+                
+                {/* Share Button */}
+                <button 
+                  onClick={() => setIsShareDrawerOpen(true)}
+                  className="py-3 px-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 flex items-center justify-center transition-all duration-200 hover:bg-white/15 active:scale-95"
+                >
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         );
@@ -3571,20 +3633,6 @@ export default function Page() {
                 </Link>
               </div>
 
-              {/* Share */}
-              <div className="flex flex-col items-center space-y-2">
-                <button 
-                  className="relative"
-                  onClick={() => setIsShareDrawerOpen(true)}
-                >
-                  <div className="w-12 h-12 rounded-xl bg-black/20 backdrop-blur-sm border border-white/10 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" style={{filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.3))'}}>
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186zm0-12.814a2.25 2.25 0 103.934-2.186 2.25 2.25 0 00-3.934 2.186z" />
-                    </svg>
-                  </div>
-                  <span className="text-white text-xs font-medium mt-2" style={{textShadow: '0 1px 2px rgba(0,0,0,0.8)'}}>Share</span>
-                </button>
-              </div>
             </div>
 
             {/* Content - Left Side */}
@@ -3642,7 +3690,7 @@ export default function Page() {
               {/* CTA */}
               <Link 
                 href="/rewards"
-                className="bg-white text-black py-3 px-6 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95 mb-2 flex items-center justify-center space-x-2"
+                className="bg-white text-black py-3 px-4 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/90 active:scale-95 mb-2 flex items-center justify-center space-x-2"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
@@ -4004,70 +4052,95 @@ export default function Page() {
         </div>
       )}
 
-      {/* Stats Drawer */}
-      {isStatsDrawerOpen && (
+      {/* AI Insights Drawer */}
+      {isAIDrawerOpen && (
         <div className="fixed inset-0 z-50 flex items-end justify-center">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setIsStatsDrawerOpen(false)}></div>
-          <div className="relative bg-white rounded-t-3xl w-full max-w-md max-h-[80vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900">Head-to-Head Stats</h2>
-                <button 
-                  onClick={() => setIsStatsDrawerOpen(false)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
+          <div className="absolute inset-0 bg-black/50" onClick={() => setIsAIDrawerOpen(false)}></div>
+          <div className="relative bg-white/95 backdrop-blur-xl rounded-t-2xl w-full max-w-md max-h-[90vh] overflow-hidden border-t border-white/20 flex flex-col">
+            {/* Handle */}
+            <div className="flex justify-center py-3">
+              <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
+            </div>
+            
+            {/* Header */}
+            <div className="px-6 pb-4 border-b border-gray-200 flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <h2 className="text-xl font-bold text-gray-900">AI Insights</h2>
               </div>
-              
-              <div className="space-y-6">
-                <div className="text-center">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Chiefs vs Bills</h3>
-                  <div className="text-sm text-gray-600 mb-4">Last Meeting: Week 6, 2023</div>
-                </div>
+              <button 
+                onClick={() => setIsAIDrawerOpen(false)}
+                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+              >
+                <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            {/* Content */}
+            <div className="flex-1 overflow-y-auto">
+              <div className="p-6 space-y-6">
+                {(() => {
+                  const insights = getAIInsights(currentMatchForAI);
+                  return (
+                    <>
+                      {/* Match Info */}
+                      <div className="text-center">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2">{insights.title}</h3>
+                        <div className="text-sm text-gray-600">{insights.time}</div>
+                      </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-4 bg-gray-50 rounded-lg">
-                    <div className="text-2xl font-bold text-gray-900">27</div>
-                    <div className="text-sm text-gray-600">Chiefs Points</div>
-                  </div>
-                  <div className="text-center p-4 bg-gray-50 rounded-lg">
-                    <div className="text-2xl font-bold text-gray-900">24</div>
-                    <div className="text-sm text-gray-600">Bills Points</div>
-                  </div>
-                </div>
+                      {/* AI Analysis */}
+                      <div className="space-y-4">
+                        <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 border border-purple-100">
+                          <div className="flex items-center space-x-2 mb-3">
+                            <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                            <span className="text-sm font-semibold text-purple-900">AI Analysis</span>
+                          </div>
+                          <p className="text-sm text-gray-700 leading-relaxed">
+                            {insights.analysis}
+                          </p>
+                        </div>
 
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center py-2 border-b border-gray-200">
-                    <span className="text-gray-700">Total Yards</span>
-                    <div className="flex space-x-4">
-                      <span className="font-semibold">Chiefs: 387</span>
-                      <span className="font-semibold">Bills: 342</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center py-2 border-b border-gray-200">
-                    <span className="text-gray-700">Passing Yards</span>
-                    <div className="flex space-x-4">
-                      <span className="font-semibold">Chiefs: 298</span>
-                      <span className="font-semibold">Bills: 245</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center py-2 border-b border-gray-200">
-                    <span className="text-gray-700">Rushing Yards</span>
-                    <div className="flex space-x-4">
-                      <span className="font-semibold">Chiefs: 89</span>
-                      <span className="font-semibold">Bills: 97</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between items-center py-2">
-                    <span className="text-gray-700">Turnovers</span>
-                    <div className="flex space-x-4">
-                      <span className="font-semibold">Chiefs: 1</span>
-                      <span className="font-semibold">Bills: 2</span>
-                    </div>
-                  </div>
+                        <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
+                          <div className="flex items-center space-x-2 mb-3">
+                            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <span className="text-sm font-semibold text-blue-900">Key Insights</span>
+                          </div>
+                          <ul className="text-sm text-gray-700 space-y-2">
+                            {insights.insights.map((insight: string, index: number) => (
+                              <li key={index} className="flex items-start space-x-2">
+                                <span className="text-blue-500 mt-1">•</span>
+                                <span>{insight}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <div className="bg-green-50 rounded-xl p-4 border border-green-100">
+                          <div className="flex items-center space-x-2 mb-3">
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <span className="text-sm font-semibold text-green-900">Confidence Score</span>
+                          </div>
+                          <div className="flex items-center space-x-3">
+                            <div className="flex-1 bg-gray-200 rounded-full h-2">
+                              <div className="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full" style={{width: `${insights.confidence}%`}}></div>
+                            </div>
+                            <span className="text-sm font-semibold text-green-900">{insights.confidence}%</span>
+                          </div>
+                          <p className="text-xs text-gray-600 mt-2">High confidence based on multiple data points</p>
+                        </div>
+                      </div>
+                    </>
+                  );
+                })()}
+
+                {/* Disclaimer */}
+                <div className="text-xs text-gray-500 text-center border-t pt-4">
+                  AI insights are for informational purposes only. Past performance doesn't guarantee future results.
                 </div>
               </div>
             </div>
@@ -5078,21 +5151,32 @@ export default function Page() {
           ></div>
           
           {/* Drawer */}
-          <div className="relative bg-white/95 backdrop-blur-xl rounded-t-2xl w-full max-w-md max-h-[90vh] overflow-hidden border-t border-white/20">
+          <div className="relative bg-white/95 backdrop-blur-xl rounded-t-2xl w-full max-w-md max-h-[60vh] overflow-hidden border-t border-white/20 flex flex-col">
             {/* Handle */}
             <div className="flex justify-center py-3">
               <div className="w-10 h-1 bg-gray-300 rounded-full"></div>
             </div>
             
             {/* Header */}
-            <div className="px-6 pb-4 border-b border-gray-200">
-              <h2 className="text-xl font-bold text-gray-900">Share Reel</h2>
-              <p className="text-sm text-gray-600 mt-1">Share this reel and earn rewards!</p>
+            <div className="px-6 pb-4 border-b border-gray-200 flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">Share Reel</h2>
+                <p className="text-sm text-gray-600 mt-1">Share this reel and earn rewards!</p>
+              </div>
+              {/* Close Button */}
+              <button 
+                onClick={() => setIsShareDrawerOpen(false)}
+                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+              >
+                <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
             
             {/* Content */}
-            <div className="p-6">
-              <div className="space-y-4">
+            <div className="flex-1 overflow-y-auto">
+              <div className="p-6 space-y-4">
                 {/* TikTok */}
                 <button 
                   className="w-full flex items-center space-x-4 p-4 rounded-xl bg-black hover:bg-gray-800 transition-colors text-left"
