@@ -14,7 +14,7 @@ export default function GlobalHeader({ isBalanceDrawerOpen, setIsBalanceDrawerOp
         <div className="flex items-center">
           <Image
             src="/flaame.png"
-            alt="BetBolt Logo"
+            alt="Flaame Logo"
             width={60}
             height={60}
           />

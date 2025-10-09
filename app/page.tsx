@@ -3742,35 +3742,21 @@ export default function Page() {
   // Handle URL-based reel navigation
   useEffect(() => {
     const reelId = searchParams.get('reel');
-    console.log('URL reelId:', reelId);
-    console.log('Available reels:', reels.map(r => r.id));
-    
     if (reelId && reels.length > 0) {
       const reelIndex = reels.findIndex(reel => reel.id === reelId);
-      console.log('Found reel index:', reelIndex);
-      
       if (reelIndex !== -1) {
-        console.log('Setting currentReelIndex to:', reelIndex);
         setCurrentReelIndex(reelIndex);
-      } else {
-        console.log('Reel not found, staying on current index:', currentReelIndex);
       }
-    } else {
-      console.log('No reelId in URL or reels not loaded yet');
     }
   }, [searchParams, reels]);
 
   // Update the handleReelChange function to include URL updating
   const updateHandleReelChange = (newIndex: number) => {
-    console.log('updateHandleReelChange called with index:', newIndex);
     setCurrentReelIndex(newIndex);
     const reelId = reels[newIndex]?.id;
-    console.log('Updating URL with reelId:', reelId);
-    
     if (reelId) {
       const url = new URL(window.location.href);
       url.searchParams.set('reel', reelId);
-      console.log('New URL:', url.pathname + url.search);
       router.replace(url.pathname + url.search, { scroll: false });
     }
   };
@@ -3790,7 +3776,7 @@ export default function Page() {
     >
       {/* Global Logo - Fixed on all reels */}
       <div className="fixed top-4 left-4 z-50">
-        <Image src="/flaame.png" alt="BetBolt Logo" width={60} height={60} />
+        <Image src="/flaame.png" alt="Flaame Logo" width={60} height={60} />
       </div>
 
       {/* Global Balance - Fixed on all reels */}
@@ -4835,9 +4821,9 @@ export default function Page() {
                       <div className="w-6 h-6 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                         <span className="text-white text-xs font-bold">BB</span>
                       </div>
-                      <h3 className="text-base font-semibold text-gray-900">BetBolt User</h3>
+                      <h3 className="text-base font-semibold text-gray-900">Flaame User</h3>
                     </div>
-                    <p className="text-gray-500 text-xs">user@betbolt.com</p>
+                    <p className="text-gray-500 text-xs">user@flaame.com</p>
                   </div>
                 </div>
               </div>

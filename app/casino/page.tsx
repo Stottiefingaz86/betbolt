@@ -134,7 +134,7 @@ export default function CasinoPage() {
       { id: 'mrmammoth', title: 'MR MAMMOTH', provider: 'BETSOFT', label: 'NEW', labelBg: 'bg-green-500', rtp: '96.2' },
       { id: 'live-roulette', title: 'LIVE ROULETTE', provider: 'Evolution', label: 'LIVE', labelBg: 'bg-blue-500', rtp: '97.3' },
       { id: 'gold-nugget', title: 'GOLD NUGGET RUSH', provider: 'BETSOFT', label: 'JACKPOT', labelBg: 'bg-yellow-500', rtp: '96.8' },
-      { id: 'exclusive-slot', title: 'EXCLUSIVE SLOT', provider: 'BetBolt', label: 'EXCLUSIVE', labelBg: 'bg-purple-500', rtp: '97.1' },
+      { id: 'exclusive-slot', title: 'EXCLUSIVE SLOT', provider: 'Flaame', label: 'EXCLUSIVE', labelBg: 'bg-purple-500', rtp: '97.1' },
       { id: 'starburst', title: 'STARBURST', provider: 'NetEnt', label: 'CLASSIC', labelBg: 'bg-gray-500', rtp: '96.1' },
     ],
     'slots': [
@@ -156,8 +156,8 @@ export default function CasinoPage() {
       { id: 'live-baccarat', title: 'LIVE BACCARAT', provider: 'Evolution', label: 'LIVE', labelBg: 'bg-blue-500', rtp: '98.9' },
       { id: 'live-roulette', title: 'LIVE ROULETTE', provider: 'Evolution', label: 'LIVE', labelBg: 'bg-blue-500', rtp: '97.3' },
       { id: 'live-poker', title: 'LIVE POKER', provider: 'Evolution', label: 'LIVE', labelBg: 'bg-blue-500', rtp: '99.1' },
-      { id: 'blackjack', title: 'BLACKJACK', provider: 'BetBolt', label: 'CLASSIC', labelBg: 'bg-gray-500', rtp: '99.6' },
-      { id: 'roulette', title: 'ROULETTE', provider: 'BetBolt', label: 'CLASSIC', labelBg: 'bg-gray-500', rtp: '97.3' },
+      { id: 'blackjack', title: 'BLACKJACK', provider: 'Flaame', label: 'CLASSIC', labelBg: 'bg-gray-500', rtp: '99.6' },
+      { id: 'roulette', title: 'ROULETTE', provider: 'Flaame', label: 'CLASSIC', labelBg: 'bg-gray-500', rtp: '97.3' },
     ],
     'live': [
       { id: 'live-blackjack', title: 'LIVE BLACKJACK', provider: 'Evolution', label: 'LIVE', labelBg: 'bg-blue-500', rtp: '99.5' },
@@ -175,11 +175,11 @@ export default function CasinoPage() {
       { id: 'jackpot-giant', title: 'JACKPOT GIANT', provider: 'Play\'n GO', label: 'JACKPOT', labelBg: 'bg-yellow-500', rtp: '96.0' },
     ],
     'originals': [
-      { id: 'betbolt-blackjack', title: 'BETBOLT BLACKJACK', provider: 'BetBolt Originals', label: 'EXCLUSIVE', labelBg: 'bg-purple-500', rtp: '99.6' },
-      { id: 'betbolt-roulette', title: 'BETBOLT ROULETTE', provider: 'BetBolt Originals', label: 'EXCLUSIVE', labelBg: 'bg-purple-500', rtp: '97.3' },
-      { id: 'betbolt-slots', title: 'BETBOLT SLOTS', provider: 'BetBolt Originals', label: 'NEW', labelBg: 'bg-yellow-500', rtp: '96.8' },
-      { id: 'betbolt-bingo', title: 'BETBOLT BINGO', provider: 'BetBolt Originals', label: 'EXCLUSIVE', labelBg: 'bg-purple-500', rtp: '95.5' },
-      { id: 'betbolt-crash', title: 'BETBOLT CRASH', provider: 'BetBolt Originals', label: 'EXCLUSIVE', labelBg: 'bg-purple-500', rtp: '97.0' },
+      { id: 'betbolt-blackjack', title: 'FLAAME BLACKJACK', provider: 'Flaame Originals', label: 'EXCLUSIVE', labelBg: 'bg-purple-500', rtp: '99.6' },
+      { id: 'betbolt-roulette', title: 'FLAAME ROULETTE', provider: 'Flaame Originals', label: 'EXCLUSIVE', labelBg: 'bg-purple-500', rtp: '97.3' },
+      { id: 'betbolt-slots', title: 'FLAAME SLOTS', provider: 'Flaame Originals', label: 'NEW', labelBg: 'bg-yellow-500', rtp: '96.8' },
+      { id: 'betbolt-bingo', title: 'FLAAME BINGO', provider: 'Flaame Originals', label: 'EXCLUSIVE', labelBg: 'bg-purple-500', rtp: '95.5' },
+      { id: 'betbolt-crash', title: 'FLAAME CRASH', provider: 'Flaame Originals', label: 'EXCLUSIVE', labelBg: 'bg-purple-500', rtp: '97.0' },
     ],
   };
 
@@ -229,7 +229,7 @@ export default function CasinoPage() {
             <Link href="/" className="hover:opacity-80 transition-opacity">
               <Image
                 src="/flaame.png"
-                alt="BetBolt Logo"
+                alt="Flaame Logo"
                 width={60}
                 height={60}
               />
@@ -385,7 +385,7 @@ export default function CasinoPage() {
 
           {/* Originals Carousel */}
           <div>
-            <h2 className="text-lg font-black mb-4 text-white">BetBolt Originals</h2>
+            <h2 className="text-lg font-black mb-4 text-white">Flaame Originals</h2>
             <div className="flex space-x-4 overflow-x-auto scrollbar-hide pb-2">
               {casinoGames['originals'].map((game, index) => (
                 <GameTile
@@ -614,9 +614,9 @@ export default function CasinoPage() {
                       <div className="w-6 h-6 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center">
                         <span className="text-white text-xs font-bold">BB</span>
                       </div>
-                      <h3 className="text-base font-semibold text-gray-900">BetBolt User</h3>
+                      <h3 className="text-base font-semibold text-gray-900">Flaame User</h3>
                     </div>
-                    <p className="text-gray-500 text-xs">user@betbolt.com</p>
+                    <p className="text-gray-500 text-xs">user@flaame.com</p>
                   </div>
                 </div>
               </div>

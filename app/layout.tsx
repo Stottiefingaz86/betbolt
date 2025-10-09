@@ -6,13 +6,13 @@ import { Providers } from './providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'BetBolt - Sports Reels & Casino',
+  title: 'Flaame - Sports Reels & Casino',
   description: 'Mobile-first sports betting with TikTok-style reels',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'BetBolt',
+    title: 'Flaame',
   },
   other: {
     'mobile-web-app-capable': 'yes',
