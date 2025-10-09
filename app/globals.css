@@ -6,6 +6,57 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Shiny Text Animation */
+.shiny-text {
+  color: #e5e5e5;
+  background: linear-gradient(
+    90deg,
+    #e5e5e5 0%,
+    #ffffff 50%,
+    #e5e5e5 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+  animation: shine 3s ease-in-out infinite;
+}
+
+@keyframes shine {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.shiny-text.disabled {
+  animation: none;
+  -webkit-text-fill-color: #e5e5e5;
+  background: none;
+}
+
+/* Shiny AI Icon Effect */
+.ai-icon-shimmer svg {
+  stroke: #ffffff;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.3));
+  animation: iconShimmer 2s ease-in-out infinite;
+}
+
+@keyframes iconShimmer {
+  0%, 100% {
+    stroke: #ffffff;
+    filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.3));
+  }
+  50% {
+    stroke: #fbbf24;
+    filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.6));
+  }
+}
+
 @layer utilities {
   .scrollbar-hide {
     -ms-overflow-style: none;
