@@ -22,26 +22,26 @@ export class SimpleConfetti {
     this.canvas.height = window.innerHeight;
     document.body.appendChild(this.canvas);
 
-    // Create particles
-    for (let i = 0; i < 75; i++) {
+    // Create particles - more for full screen effect
+    for (let i = 0; i < 150; i++) {
       this.particles.push(new ConfettiParticle());
     }
 
     // Start animation
     this.animate();
     
-    // Clean up after 5 seconds
+    // Clean up after 7 seconds for longer animation
     setTimeout(() => {
       this.destroy();
-    }, 5000);
+    }, 7000);
   }
 
   private animate = (): void => {
     const currentTime = Date.now();
     const elapsed = currentTime - this.startTime;
     
-    // Stop animation after 4.5 seconds to allow particles to fade
-    if (elapsed > 4500) {
+    // Stop animation after 6.5 seconds to allow particles to fade
+    if (elapsed > 6500) {
       this.destroy();
       return;
     }
@@ -59,7 +59,7 @@ export class SimpleConfetti {
     });
     
     // Continue animation if we still have particles or haven't reached time limit
-    if (this.particles.length > 0 || elapsed < 4500) {
+    if (this.particles.length > 0 || elapsed < 6500) {
       this.animationId = requestAnimationFrame(this.animate);
     } else {
       this.destroy();
@@ -90,16 +90,17 @@ class ConfettiParticle {
   maxLife: number;
 
   constructor() {
-    this.x = window.innerWidth / 2;
-    this.y = window.innerHeight / 2;
-    this.vx = (Math.random() - 0.5) * 8;
-    this.vy = (Math.random() - 0.5) * 8 - 2; // Slight upward bias
+    // Start from random position across the top of the screen
+    this.x = Math.random() * window.innerWidth;
+    this.y = -10; // Start above the screen
+    this.vx = (Math.random() - 0.5) * 4; // Gentle horizontal drift
+    this.vy = Math.random() * 3 + 2; // Fall down with some variation
     this.color = `hsl(${Math.random() * 360}, 80%, 60%)`;
     this.size = Math.random() * 6 + 3;
     this.rotation = Math.random() * 360;
     this.rotationSpeed = (Math.random() - 0.5) * 8;
     this.life = 0;
-    this.maxLife = 4000; // 4 seconds
+    this.maxLife = 6000; // 6 seconds for longer fall
   }
 
   update(): void {
@@ -129,7 +130,29 @@ class ConfettiParticle {
     ctx.rotate(this.rotation * Math.PI / 180);
     ctx.globalAlpha = alpha;
     ctx.fillStyle = this.color;
-    ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+    
+    // Draw different shapes for variety
+    const shapeType = Math.floor(this.x / 100) % 3; // Vary shape based on position
+    
+    if (shapeType === 0) {
+      // Rectangle confetti
+      ctx.fillRect(-this.size / 2, -this.size / 4, this.size, this.size / 2);
+    } else if (shapeType === 1) {
+      // Circle confetti
+      ctx.beginPath();
+      ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      // Diamond confetti
+      ctx.beginPath();
+      ctx.moveTo(0, -this.size / 2);
+      ctx.lineTo(this.size / 2, 0);
+      ctx.lineTo(0, this.size / 2);
+      ctx.lineTo(-this.size / 2, 0);
+      ctx.closePath();
+      ctx.fill();
+    }
+    
     ctx.restore();
   }
 }
