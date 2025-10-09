@@ -121,18 +121,22 @@ export default function Page() {
       }
     };
     
-    return insights[matchData] || {
-      title: matchData || 'Match Analysis',
-      league: 'Sports',
-      time: 'Today',
-      analysis: "AI analysis is being processed. Based on available data, this appears to be a competitive matchup with multiple factors influencing the outcome.",
-      insights: [
-        "Historical data suggests competitive matchup",
-        "Multiple factors influencing outcome",
-        "Recommend checking live updates"
-      ],
-      confidence: 65
-    };
+    if (!matchData || !(matchData in insights)) {
+      return {
+        title: matchData || 'Match Analysis',
+        league: 'Sports',
+        time: 'Today',
+        analysis: "AI analysis is being processed. Based on available data, this appears to be a competitive matchup with multiple factors influencing the outcome.",
+        insights: [
+          "Historical data suggests competitive matchup",
+          "Multiple factors influencing outcome",
+          "Recommend checking live updates"
+        ],
+        confidence: 65
+      };
+    }
+    
+    return insights[matchData as keyof typeof insights];
   };
   const [isMarketsDrawerOpen, setIsMarketsDrawerOpen] = useState(false);
   const [showSuccessScreen, setShowSuccessScreen] = useState(false);
